@@ -1,24 +1,33 @@
 <!--
 Sync Impact Report
 ==================
-Version change: [TEMPLATE] → 1.0.0 (initial ratification)
-Modified principles: n/a (first concrete version, template placeholders replaced)
-Added sections:
-  - I. Spec-Driven Development (NON-NEGOTIABLE)
-  - II. Test-First (TDD, NON-NEGOTIABLE)
-  - III. Simplicity & YAGNI
-  - IV. Zero-Cost, Client-Side Architecture
-  - V. Quality Gates (CI + Review)
-  - Technology Constraints
-  - Development Workflow
-  - Governance
-Removed sections: none (template placeholders only)
+Version change: 1.0.0 → 1.1.0 (MINOR: clarified scope of an existing principle + widened a
+  governance carve-out; no existing requirement was loosened for application code)
+Modified principles:
+  - II. Test-First (TDD, NON-NEGOTIABLE) — added a scope paragraph: this principle governs
+    application code; internal developer tooling without a natural Vitest/RTL target is
+    exempt from that specific stack requirement but must still define its own deterministic
+    verification procedure, logged via Complexity Tracking. The NON-NEGOTIABLE status for
+    application code is unchanged.
+Added sections: none
+Removed sections: none
+Governance change: the Complexity Tracking justification mechanism, previously scoped to
+  Principles III/IV only, now also covers Principle II's non-application-tooling exemption.
+Trigger: /speckit-analyze on feature 002-git-worktree-setup found that
+  specs/002-git-worktree-setup/plan.md relied on Complexity Tracking to justify skipping
+  Vitest for two bash scripts — a use the Governance section did not yet authorize (it only
+  named Principle III/IV). This amendment closes that gap explicitly rather than leaving the
+  plan resting on an ungoverned interpretation.
 Templates requiring updates:
   - .specify/templates/plan-template.md ✅ (generic "Constitution Check" gate remains compatible, no edit needed)
   - .specify/templates/spec-template.md ✅ (no constitution-specific references, no edit needed)
   - .specify/templates/tasks-template.md ✅ (generic structure remains compatible, no edit needed)
   - .claude/skills/speckit-*/SKILL.md ✅ (agent-agnostic, no CLAUDE-only references found)
-Follow-up TODOs: none
+Follow-up TODOs:
+  - specs/002-git-worktree-setup/plan.md: update the Constitution Check row for Principle II
+    and the Complexity Tracking table to note the exemption is now explicitly sanctioned
+    (currently phrased as a self-justified deviation) — not done by this command, out of its
+    scope (see /speckit-analyze report for the original finding).
 -->
 
 # Badzwanzen Constitution
@@ -44,6 +53,14 @@ Vitest for unit/logic tests and React Testing Library for component tests. A tas
 introduces behavior (game logic, scoring, question/player flow) without a preceding failing
 test is incomplete. Rationale: TDD is an explicit learning goal for the student on this
 project, alongside being good engineering practice.
+
+This principle governs application code (components, hooks, game logic) built on the
+project's Vite/React stack. Internal developer tooling (e.g., shell scripts under
+`.specify/scripts/`) that has no natural Vitest/RTL target is exempt from that specific stack
+requirement, but MUST still define and document its own deterministic, repeatable
+verification procedure (e.g., a `quickstart.md` walkthrough run red → green against real
+state) before being considered complete — logged via Complexity Tracking per Governance, not
+silently assumed. This exemption does not extend to the application itself.
 
 ### III. Simplicity & YAGNI
 
@@ -106,6 +123,7 @@ Spec Kit templates. Versioning policy:
 
 Every pull request implicitly asserts compliance with this constitution; a reviewer who spots a
 violation should raise it before merging rather than after. Complexity that violates Principle
-III or IV MUST be justified in the relevant `plan.md`'s Complexity Tracking table or rejected.
+II (only for the non-application-tooling exemption defined in that principle), III, or IV MUST
+be justified in the relevant `plan.md`'s Complexity Tracking table or rejected.
 
-**Version**: 1.0.0 | **Ratified**: 2026-07-25 | **Last Amended**: 2026-07-25
+**Version**: 1.1.0 | **Ratified**: 2026-07-25 | **Last Amended**: 2026-07-25
