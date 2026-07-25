@@ -39,6 +39,23 @@ npm install
 Start daarna de spec-driven flow zoals gebruikelijk (`/speckit-specify ...`) vanuit die nieuwe
 werkmap.
 
+### Optioneel: meteen een IDE-venster openen
+
+Gebruik je IntelliJ IDEA en heb je de `idea` CLI-launcher geïnstalleerd (Toolbox → instellingen
+→ "Generate shell scripts", of `Tools > Create Command-line Launcher` in de IDE)? Voeg dan
+`--open-ide` toe:
+
+```bash
+.specify/scripts/bash/worktree-add.sh --short-name jouw-korte-naam --open-ide "Omschrijving"
+```
+
+Dit opent de nieuwe werkmap in een los IntelliJ-venster (in de praktijk een nieuwe tab/vensters
+binnen dezelfde IDE-instance). Puur gemak — zonder de flag werkt alles zoals hierboven
+beschreven. Is `idea` niet op je `PATH`, dan print het script een waarschuwing en gaat verder
+zonder te falen. Er is geen manier om vanuit dit script ook automatisch een Claude Code-sessie
+in dat nieuwe venster te starten (de terminal-integratie van de `idea` MCP-server vangt
+stdin/stdout af, waardoor `claude` niet interactief opstart) — dat blijft een handmatige stap.
+
 ## Nummering over werkmappen heen
 
 Het volgnummer van een nieuwe feature wordt berekend op basis van zowel de mappen onder
@@ -69,6 +86,13 @@ weg mag, gebruik dan:
 ```bash
 .specify/scripts/bash/worktree-remove.sh <branch-naam> --force
 ```
+
+**Als je `--open-ide` gebruikte bij het aanmaken**: `worktree-remove.sh` sluit die IntelliJ-tab
+niet automatisch. Met de standaard IDE-instelling ("open in hetzelfde venster") opent een nieuwe
+worktree als tab binnen je bestaande IntelliJ-venster, niet als los OS-venster — en er is geen
+tool die specifiek één project-tab kan sluiten zonder het risico te lopen het hele venster (met
+je andere open tabs) te sluiten. Het script print daarom alleen een herinnering; sluit de tab
+zelf handmatig in IntelliJ.
 
 ## Bekende beperkingen
 

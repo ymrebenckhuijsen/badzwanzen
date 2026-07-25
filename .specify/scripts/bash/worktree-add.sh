@@ -6,6 +6,7 @@
 set -e
 
 SHORT_NAME=""
+OPEN_IDE=false
 ARGS=()
 
 while [ $# -gt 0 ]; do
@@ -18,12 +19,20 @@ while [ $# -gt 0 ]; do
             SHORT_NAME="$2"
             shift 2
             ;;
+        --open-ide)
+            OPEN_IDE=true
+            shift
+            ;;
         --help|-h)
-            echo "Usage: $0 [--short-name <name>] \"<feature description>\""
+            echo "Usage: $0 [--short-name <name>] [--open-ide] \"<feature description>\""
             echo ""
             echo "Fetches origin, computes the next collision-safe feature number/branch"
             echo "name, and creates a new git worktree + branch for it at"
             echo "../<repo-name>-worktrees/<branch-name>/, based on origin/main."
+            echo ""
+            echo "--open-ide opens the new worktree in a separate IntelliJ IDEA window"
+            echo "via the 'idea' CLI launcher, if it's installed. Opt-in and best-effort:"
+            echo "silently skipped with a warning if 'idea' isn't on PATH."
             exit 0
             ;;
         --)
@@ -110,6 +119,17 @@ ADD_OUTPUT=$(git worktree add -b "$BRANCH_NAME" "$WORKTREE_PATH" origin/main 2>&
 
 echo "Created worktree: $WORKTREE_PATH"
 echo "Branch: $BRANCH_NAME"
+
+if [ "$OPEN_IDE" = true ]; then
+    if command -v idea >/dev/null 2>&1; then
+        echo "Opening $WORKTREE_PATH in a new IntelliJ IDEA window..."
+        idea "$WORKTREE_PATH" >/dev/null 2>&1 &
+        disown
+    else
+        echo "Warning: --open-ide was passed but 'idea' CLI launcher is not on PATH; skipping." >&2
+    fi
+fi
+
 echo ""
 echo "Next steps:"
 echo "  cd $WORKTREE_PATH"

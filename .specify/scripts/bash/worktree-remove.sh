@@ -83,6 +83,13 @@ else
     echo "Note: branch '$BRANCH_NAME' is not yet merged into main; left in place"
 fi
 
+if command -v idea >/dev/null 2>&1; then
+    echo ""
+    echo "Note: if you opened this worktree with 'worktree-add.sh --open-ide', its IntelliJ"
+    echo "tab/window is still open — close it manually (there's no reliable way to close just"
+    echo "that project tab automatically; see docs/worktrees.md)."
+fi
+
 echo ""
 echo "Current worktrees:"
 git worktree list
