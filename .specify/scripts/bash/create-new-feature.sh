@@ -94,19 +94,10 @@ if [ -z "$FEATURE_DESCRIPTION" ]; then
     exit 1
 fi
 
-MAX_FEATURE_NUMBER=9223372036854775807
 MAX_BRANCH_LENGTH=244
 
-is_feature_number_in_range() {
-    local value="$1"
-    local normalized="${value#"${value%%[!0]*}"}"
-    [ -n "$normalized" ] || normalized=0
-    [ ${#normalized} -lt ${#MAX_FEATURE_NUMBER} ] && return 0
-    [ ${#normalized} -gt ${#MAX_FEATURE_NUMBER} ] && return 1
-    # Equal-length digit strings must be compared without arithmetic overflow.
-    # shellcheck disable=SC2071
-    [[ "$normalized" < "$MAX_FEATURE_NUMBER" || "$normalized" == "$MAX_FEATURE_NUMBER" ]]
-}
+# MAX_FEATURE_NUMBER and is_feature_number_in_range() now live in common.sh
+# (shared with get_highest_from_branches, used below and by worktree-add.sh).
 
 # Function to get highest number from specs directory
 get_highest_from_specs() {
@@ -142,6 +133,17 @@ spec_prefix_exists() {
         [ -d "$spec_path" ] && return 0
     done
     return 1
+}
+
+# Return success when a local or remote-tracking branch owns the given numeric
+# prefix. Complements spec_prefix_exists() so an explicit --number is checked
+# against branches too, not just the local specs/ directory (see common.sh
+# get_highest_from_branches for why this matters across parallel worktrees).
+branch_prefix_exists() {
+    local feature_num="$1"
+    git for-each-ref --format='%(refname:short)' refs/heads refs/remotes/origin 2>/dev/null \
+        | sed 's#^origin/##' \
+        | grep -q "^${feature_num}-"
 }
 
 # Function to clean and format a branch name
@@ -274,9 +276,15 @@ else
         exit 1
     fi
 
-    # Determine branch number from existing feature directories
+    # Determine branch number from existing feature directories AND existing
+    # branches (local + remote) — a branch can exist without its specs/ dir
+    # being present in this checkout (e.g. an unmerged branch in another
+    # worktree, or a teammate's branch not yet fetched here).
     if [ -z "$BRANCH_NUMBER" ]; then
-        HIGHEST=$(get_highest_from_specs "$SPECS_DIR")
+        HIGHEST_SPECS=$(get_highest_from_specs "$SPECS_DIR")
+        HIGHEST_BRANCHES=$(get_highest_from_branches)
+        HIGHEST=$HIGHEST_SPECS
+        [ "$HIGHEST_BRANCHES" -gt "$HIGHEST" ] && HIGHEST=$HIGHEST_BRANCHES
         if [ "$HIGHEST" -eq "$MAX_FEATURE_NUMBER" ]; then
             echo "Error: feature number must be between 0 and $MAX_FEATURE_NUMBER, got '9223372036854775808'" >&2
             exit 1
@@ -295,11 +303,15 @@ else
         REQUESTED_DIR="$SPECS_DIR/$REQUESTED_BRANCH_NAME"
         if [ "$ALLOW_EXISTING" != true ] || [ ! -d "$REQUESTED_DIR" ]; then
             spec_prefix_exists "$SPECS_DIR" "$FEATURE_NUM" && SPEC_CONFLICT=true
+            branch_prefix_exists "$FEATURE_NUM" && SPEC_CONFLICT=true
         fi
 
         if [ "$SPEC_CONFLICT" = true ]; then
             REQUESTED_NUM="$FEATURE_NUM"
-            HIGHEST=$(get_highest_from_specs "$SPECS_DIR")
+            HIGHEST_SPECS=$(get_highest_from_specs "$SPECS_DIR")
+            HIGHEST_BRANCHES=$(get_highest_from_branches)
+            HIGHEST=$HIGHEST_SPECS
+            [ "$HIGHEST_BRANCHES" -gt "$HIGHEST" ] && HIGHEST=$HIGHEST_BRANCHES
             BRANCH_NUMBER=$HIGHEST
             while true; do
                 if [ "$BRANCH_NUMBER" -eq "$MAX_FEATURE_NUMBER" ]; then
@@ -308,9 +320,9 @@ else
                 fi
                 BRANCH_NUMBER=$((BRANCH_NUMBER + 1))
                 FEATURE_NUM=$(printf "%03d" "$((10#$BRANCH_NUMBER))")
-                spec_prefix_exists "$SPECS_DIR" "$FEATURE_NUM" || break
+                spec_prefix_exists "$SPECS_DIR" "$FEATURE_NUM" || branch_prefix_exists "$FEATURE_NUM" || break
             done
-            >&2 echo "[specify] Warning: --number $REQUESTED_NUM conflicts with an existing spec directory; using $FEATURE_NUM instead"
+            >&2 echo "[specify] Warning: --number $REQUESTED_NUM conflicts with an existing spec directory or branch; using $FEATURE_NUM instead"
         fi
     fi
 

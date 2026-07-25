@@ -395,6 +395,57 @@ json_escape() {
     done
 }
 
+# Feature numbering helpers, shared by create-new-feature.sh and worktree-add.sh so both
+# agree on what the "next" feature number is, regardless of which script computes it.
+
+# Largest feature number the numbering scheme supports. Digit strings equal in
+# length to this bound are compared lexically (see is_feature_number_in_range)
+# to avoid 64-bit arithmetic overflow on very long digit strings.
+MAX_FEATURE_NUMBER=9223372036854775807
+
+# True (0) if $1 (a digit string, possibly with leading zeros) is within
+# [0, MAX_FEATURE_NUMBER]; false (1) otherwise. Leading-zero-normalized length
+# comparison first, then a lexical tie-break for equal-length strings.
+is_feature_number_in_range() {
+    local value="$1"
+    local normalized="${value#"${value%%[!0]*}"}"
+    [ -n "$normalized" ] || normalized=0
+    [ ${#normalized} -lt ${#MAX_FEATURE_NUMBER} ] && return 0
+    [ ${#normalized} -gt ${#MAX_FEATURE_NUMBER} ] && return 1
+    # shellcheck disable=SC2071
+    [[ "$normalized" < "$MAX_FEATURE_NUMBER" || "$normalized" == "$MAX_FEATURE_NUMBER" ]]
+}
+
+# Highest sequential feature number (NNN-*) found among branch names — both
+# local (refs/heads) and remote-tracking (refs/remotes/origin) — or 0 if none.
+#
+# This exists because scanning only the local specs/ directory (as
+# get_highest_from_specs in create-new-feature.sh does) misses a feature whose
+# branch exists but whose specs/ dir isn't present in the current worktree
+# (e.g. an unmerged branch checked out in a different worktree, or a
+# teammate's branch not yet fetched). Callers should take the max of both
+# scans so numbering stays collision-safe across parallel worktrees.
+get_highest_from_branches() {
+    local highest=0
+    local ref name number
+
+    while IFS= read -r ref; do
+        [ -n "$ref" ] || continue
+        name="${ref##*/}"
+        # Match sequential prefixes (>=3 digits), but skip timestamp-style refs
+        # (YYYYMMDD-HHMMSS-*), same convention as get_highest_from_specs.
+        if echo "$name" | grep -Eq '^[0-9]{3,}-' && ! echo "$name" | grep -Eq '^[0-9]{8}-[0-9]{6}-'; then
+            number=$(echo "$name" | grep -Eo '^[0-9]+')
+            if is_feature_number_in_range "$number"; then
+                number=$((10#$number))
+                [ "$number" -gt "$highest" ] && highest=$number
+            fi
+        fi
+    done < <(git for-each-ref --format='%(refname)' refs/heads refs/remotes/origin 2>/dev/null)
+
+    echo "$highest"
+}
+
 check_file() { [[ -f "$1" ]] && echo "  ✓ $2" || echo "  ✗ $2"; }
 check_dir() { [[ -d "$1" && -n $(ls -A "$1" 2>/dev/null) ]] && echo "  ✓ $2" || echo "  ✗ $2"; }
 
