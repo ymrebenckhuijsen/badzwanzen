@@ -94,6 +94,14 @@ tool die specifiek één project-tab kan sluiten zonder het risico te lopen het 
 je andere open tabs) te sluiten. Het script print daarom alleen een herinnering; sluit de tab
 zelf handmatig in IntelliJ.
 
+**Ook bij het afronden**: kijk terug welke skills en commando's tijdens de feature expliciet om
+toestemming vroegen (elke permission-prompt die je moest goedkeuren). Vraag Claude om de
+`fewer-permission-prompts` skill te draaien — die scant je transcripts en stelt voor welke
+veelvoorkomende, veilige (read-only) commando's je aan `.claude/settings.json` kan toevoegen, zodat
+je daar de volgende feature minder vaak voor langs hoeft. Alleen echt veilige, niet-muterende
+patronen worden voorgesteld; commando's die schrijven, verwijderen, pushen of willekeurige code
+kunnen uitvoeren (interpreters, `npx`, etc.) horen daar bewust niet in.
+
 ## Bekende beperkingen
 
 - **Dependencies zijn niet gedeeld**: `node_modules` (en elk ander niet-git-bestand) bestaat

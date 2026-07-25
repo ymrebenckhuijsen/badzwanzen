@@ -1,0 +1,13 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(command -v *)",
+      "Bash(git worktree list)",
+      "Bash(npm view *)",
+      "Bash(npm test *)",
+      "Bash(.specify/scripts/bash/check-prerequisites.sh *)",
+      "Bash(git fetch *)",
+      "Bash(claude mcp list)"
+    ]
+  }
+}
