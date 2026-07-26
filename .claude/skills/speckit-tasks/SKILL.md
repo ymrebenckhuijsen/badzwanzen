@@ -63,6 +63,7 @@ You **MUST** consider the user input before proceeding (if not empty).
    - **Required**: plan.md (tech stack, libraries, structure), spec.md (user stories with priorities)
    - **Optional**: data-model.md (entities), contracts/ (interface contracts), research.md (decisions), quickstart.md (test scenarios)
    - **IF EXISTS**: Load `.specify/memory/constitution.md` for project principles and governance constraints
+   - **IF EXISTS**: Read the repository-root `DESIGN.md` and this feature's `DESIGN.md` addendum (`<FEATURE_DIR>/DESIGN.md`) so generated tasks can reference concrete design tokens/screens instead of leaving styling undefined
    - Note: Not all projects have all documents. Generate tasks based on what's available.
 
 3. **Execute task generation workflow**:
