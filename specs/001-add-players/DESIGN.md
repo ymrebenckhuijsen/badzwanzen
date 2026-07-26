@@ -11,6 +11,7 @@ Extends [/DESIGN.md](../../DESIGN.md).
 - `projects/2820714669126137113/screens/d026d90c53de40498c533b5372397df7` — "Badzwanzen -
   Spelers Toevoegen" (mobile)
   ![Spelers toevoegen screen](./design/spelers-toevoegen-mobile.png)
+  Full mockup (self-contained, open directly in a browser): [`./design/spelers-toevoegen-mobile.html`](./design/spelers-toevoegen-mobile.html)
   Stitch project (for interactive editing): https://stitch.withgoogle.com/project/2820714669126137113
 
 ## What this feature adds or changes
@@ -34,3 +35,8 @@ application of it, not an extension.
 - 2026-07-26: generated fresh (`generate_screen_from_text`) → Draft, screenshot saved to
   `specs/001-add-players/design/spelers-toevoegen-mobile.png`.
 - 2026-07-26: Approved by the developer, no changes requested.
+- 2026-07-26: added the self-contained generated HTML mockup
+  (`specs/001-add-players/design/spelers-toevoegen-mobile.html`, from the screen's
+  `htmlCode.downloadUrl`) alongside the screenshot, retroactively — until this point only the
+  PNG was saved, so the actual generated markup depended on the Stitch project staying
+  reachable.

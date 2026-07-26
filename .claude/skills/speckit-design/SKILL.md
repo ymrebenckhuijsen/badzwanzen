@@ -122,18 +122,23 @@ explicit change request when a developer re-invokes `/speckit-design` directly m
      (`projects/2820714669126137113/screens/<id>`).
 
 6. **Present for review**:
-   - For each screen from step 5, download its `screenshot.downloadUrl` (from `get_screen`/
-     `list_screens`) to `specs/[feature]/design/<screen-slug>.png` — a real file, committed
-     alongside the addendum, not just a link. This is the actual review artifact: send it to
-     the developer directly (e.g. via a file-delivery mechanism, not just a path) so they can
-     look at it now, plus a short text summary of what was generated or changed. Also give the
-     Stitch project link (`https://stitch.withgoogle.com/project/2820714669126137113`) as a
-     secondary pointer for interactively continuing to edit the screen in Stitch itself — but
-     the committed PNG, not the hosted link, is the record of what was actually reviewed.
+   - For each screen from step 5, download both its `screenshot.downloadUrl` (to
+     `specs/[feature]/design/<screen-slug>.png`) **and** its `htmlCode.downloadUrl` (to
+     `specs/[feature]/design/<screen-slug>.html`) — real files, committed alongside the
+     addendum, not just links. The PNG is the quick-look review artifact; the HTML is the full
+     generated mockup (self-contained — embeds its own Tailwind config and the exact tokens
+     used — openable directly in a browser with no build step and no dependency on Stitch
+     staying reachable). Send the screenshot to the developer directly (e.g. via a
+     file-delivery mechanism, not just a path) so they can look at it now, plus a short text
+     summary of what was generated or changed. Also give the Stitch project link
+     (`https://stitch.withgoogle.com/project/2820714669126137113`) as a secondary pointer for
+     interactively continuing to edit the screen in Stitch itself — but the committed
+     PNG+HTML, not the hosted link, are the record of what was actually reviewed and the only
+     copy that survives if the Stitch project or screen is later changed or removed.
    - Write/update `ADDENDUM_PATH` per `contracts/design-addendum-format.md`: `Status: Draft`
      (first time) or `Status: Changes Requested` (already existed), the screen resource name(s)
-     plus the local screenshot path(s), a "What this feature adds/changes" description, and an
-     appended "Review history" line.
+     plus the local screenshot and HTML paths, a "What this feature adds/changes" description,
+     and an appended "Review history" line.
    - Ask the developer: approve this design, or request changes? **Do not treat a pre-existing
      Stitch screen as pre-approved just because it already exists in the shared project** — an
      existing screen still needs the developer's explicit look and approval before `Status`

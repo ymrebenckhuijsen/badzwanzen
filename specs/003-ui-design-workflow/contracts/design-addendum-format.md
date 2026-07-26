@@ -77,25 +77,30 @@ Extends [/DESIGN.md](../../DESIGN.md).
 ## Screens
 - `projects/2820714669126137113/screens/<id>` — <short description>
   ![<short description>](./design/<screen-slug>.png)
+  Full mockup (self-contained, open directly in a browser): `./design/<screen-slug>.html`
   Stitch project (for interactive editing): https://stitch.withgoogle.com/project/2820714669126137113
 
 ## What this feature adds or changes
 <prose>
 
 ## Review history
-- <date>: generated (Draft) — screenshot saved to `specs/[feature]/design/<screen-slug>.png`
+- <date>: generated (Draft) — screenshot + HTML mockup saved to
+  `specs/[feature]/design/<screen-slug>.{png,html}`
 - <date>: change requested — "<what the developer asked for>"
 - <date>: Approved
 ```
 
-Each screen's screenshot is downloaded (from that screen's `screenshot.downloadUrl`, as returned
-by `get_screen`/`list_screens`) and committed as a real file at
-`specs/[###-feature]/design/<screen-slug>.png` — **not** just linked to the hosted Stitch URL.
-This is what makes review possible from the git history alone (a PR diff, a later `git show`)
-without depending on Stitch staying reachable or the screen not being edited out from under a
-past decision. The Stitch project link is kept too, but only as a secondary pointer for
-*interactively continuing* to edit the screen — the committed PNG is the record of what was
-actually reviewed and approved.
+Each screen's screenshot **and** generated HTML mockup are downloaded (from that screen's
+`screenshot.downloadUrl` and `htmlCode.downloadUrl`, both returned by `get_screen`/
+`list_screens`) and committed as real files at `specs/[###-feature]/design/<screen-slug>.png`
+and `.html` — **not** just linked to the hosted Stitch URL. The PNG is for quick visual review;
+the HTML is the actual generated mockup (self-contained — embeds its own Tailwind config and
+exact color/font tokens — openable directly in a browser, no build step). Together they're what
+makes review, and re-inspection of the exact generated markup, possible from the git history
+alone (a PR diff, a later `git show`) without depending on Stitch staying reachable or the
+screen not being edited out from under a past decision. The Stitch project link is kept too,
+but only as a secondary pointer for *interactively continuing* to edit the screen — the
+committed PNG+HTML are the record of what was actually reviewed and approved.
 
 For a feature confirmed to have no UI impact, the file is minimal:
 
