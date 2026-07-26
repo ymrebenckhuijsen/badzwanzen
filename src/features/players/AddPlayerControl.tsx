@@ -42,7 +42,7 @@ export function AddPlayerControl({ onAdd }: AddPlayerControlProps) {
         type="button"
         aria-label="Speler toevoegen"
         onClick={() => setOpen(true)}
-        className="flex size-12 items-center justify-center rounded-full bg-purple-600 text-2xl leading-none text-white shadow"
+        className="flex size-14 items-center justify-center self-center rounded-full border-b-4 border-primary-fixed-dim bg-primary-container text-3xl leading-none text-on-primary-container shadow-lg transition active:translate-y-0.5 active:border-b-2"
       >
         +
       </button>
@@ -59,18 +59,18 @@ export function AddPlayerControl({ onAdd }: AddPlayerControlProps) {
           placeholder="Naam"
           aria-label="Naam van nieuwe speler"
           autoFocus
-          className="flex-1 rounded border border-gray-300 px-3 py-2"
+          className="font-body text-body-lg min-w-0 flex-1 rounded-md border-2 border-primary bg-surface-container px-4 py-2 text-on-surface placeholder:text-on-surface-variant focus:outline-none focus:ring-2 focus:ring-primary"
         />
         <button
           type="submit"
           aria-label="Bevestigen"
-          className="rounded bg-purple-600 px-4 py-2 text-white"
+          className="rounded-full border-b-4 border-primary-fixed-dim bg-primary-container px-5 py-2 font-display text-label-bold text-on-primary-container transition active:translate-y-0.5 active:border-b-2"
         >
           Bevestigen
         </button>
       </div>
       {error && (
-        <p role="alert" className="text-sm text-red-600">
+        <p role="alert" className="font-body text-body-md text-error">
           {error}
         </p>
       )}

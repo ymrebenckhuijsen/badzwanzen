@@ -7,18 +7,18 @@ interface PlayerListProps {
 
 export function PlayerList({ players, onRemove }: PlayerListProps) {
   return (
-    <ul className="flex flex-col gap-1">
+    <ul className="flex max-h-64 flex-col gap-2 overflow-y-auto">
       {players.map((player) => (
         <li
           key={player.id}
-          className="flex items-center justify-between rounded border border-gray-200 px-3 py-2"
+          className="flex items-center justify-between rounded-md bg-surface-container px-4 py-3 text-on-surface"
         >
-          <span>{player.name}</span>
+          <span className="font-body text-body-lg truncate">{player.name}</span>
           <button
             type="button"
             aria-label={`Verwijder ${player.name}`}
             onClick={() => onRemove(player.id)}
-            className="text-red-600"
+            className="flex size-8 items-center justify-center rounded-full text-lg text-error"
           >
             &times;
           </button>
