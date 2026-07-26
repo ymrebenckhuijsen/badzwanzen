@@ -1,0 +1,17 @@
+hooks:
+  before_plan:
+    - extension: ui-design-workflow
+      command: speckit.design
+      optional: false
+      description: >
+        Generates/reviews the Stitch UI design and DESIGN.md for this feature before planning.
+      prompt: Run the UI design step for the current feature before continuing to plan.
+
+  before_tasks:
+    - extension: ui-design-workflow
+      command: speckit.design
+      optional: false
+      description: >
+        Confirms the feature's DESIGN.md addendum is Approved (or marked No UI Impact) before
+        task generation is allowed to proceed.
+      prompt: Confirm the UI design for the current feature is approved before generating tasks.
