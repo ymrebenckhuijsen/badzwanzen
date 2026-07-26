@@ -7,7 +7,13 @@
       "Bash(npm test *)",
       "Bash(.specify/scripts/bash/check-prerequisites.sh *)",
       "Bash(git fetch *)",
-      "Bash(claude mcp list)"
+      "Bash(claude mcp list)",
+      "Bash(gh pr view *)",
+      "Bash(gh pr checks *)",
+      "Bash(gh auth status)",
+      "Bash(git ls-tree *)",
+      "Bash(npm run build)",
+      "Bash(npm run lint)"
     ]
   }
 }
