@@ -217,3 +217,5 @@ frontmatter for exact values):
 - `003-ui-design-workflow`: no screens of its own — this feature bootstrapped this file from
   the pre-existing "Vivid Social" Stitch design system. It has no UI impact itself (it's the
   workflow tooling that makes this file update automatically for future UI-affecting features).
+- `001-add-players`: "Badzwanzen - Spelers Toevoegen" (mobile) — the app's first screen. See
+  [specs/001-add-players/DESIGN.md](specs/001-add-players/DESIGN.md).
