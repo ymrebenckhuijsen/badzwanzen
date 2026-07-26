@@ -40,7 +40,7 @@ One instance per feature. Created the first time `speckit-design` runs for that 
 |---|---|
 | `Status` (frontmatter) | One of: `Draft`, `Changes Requested`, `Approved`, `No UI Impact` — see Design Review Status below |
 | Root reference | Link to the repository-root `DESIGN.md` this addendum extends |
-| Screens | Stitch screen resource names (`projects/{project}/screens/{screen}`) this feature added or edited, each paired with a **committed screenshot** at `specs/[feature]/design/<screen-slug>.png` (the actual reviewed artifact) plus the Stitch project link (secondary, for interactive editing) |
+| Screens | Stitch screen resource names (`projects/{project}/screens/{screen}`) this feature added or edited, each paired with a **committed screenshot** (`specs/[feature]/design/<screen-slug>.png`) and a **committed, self-contained HTML mockup** (`specs/[feature]/design/<screen-slug>.html`) — the actual reviewed artifacts — plus the Stitch project link (secondary, for interactive editing) |
 | What this feature adds/changes | Short prose description of new screens or deviations from the shared design system |
 | Review history | Append-only short log of change-request rounds (what was asked, what changed) — not a separate entity, just prose in this same file |
 

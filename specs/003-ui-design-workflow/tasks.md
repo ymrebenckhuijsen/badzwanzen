@@ -218,6 +218,14 @@ part 4".
       `package.json`/`src/index.css` (via `git show origin/main:...`) that the project is on
       Tailwind v4 with no `tailwind.config.js`, so a CSS `@theme` block — not a JS config
       object — is the correct target format.
+- [X] T023 Follow-up after merge (developer request, 2026-07-26): the review step only ever
+      saved the screenshot PNG — the actual generated markup lived purely in Stitch, with no
+      local copy. `speckit-design/SKILL.md` step 6 now also downloads each screen's
+      `htmlCode.downloadUrl` to `specs/[feature]/design/<screen-slug>.html` (self-contained —
+      embeds its own Tailwind config and exact tokens, openable directly in a browser),
+      documented in `contracts/design-addendum-format.md` and `data-model.md`. Applied
+      retroactively to feature 001's already-approved screen too
+      (`specs/001-add-players/design/spelers-toevoegen-mobile.html`).
 
 ---
 
