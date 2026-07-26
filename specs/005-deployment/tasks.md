@@ -36,10 +36,10 @@ Single project, repo root — matches `plan.md`'s Project Structure (`vercel.jso
 
 **Purpose**: Repo-side configuration needed before any Vercel account/project work
 
-- [ ] T001 [P] Create `vercel.json` at repo root with `"buildCommand": "npm run build"`,
+- [x] T001 [P] Create `vercel.json` at repo root with `"buildCommand": "npm run build"`,
       `"outputDirectory": "dist"`, `"framework": "vite"` (per `research.md` decision on
       reproducible build configuration, satisfies FR-009)
-- [ ] T002 [P] Run `npm run build` locally and confirm `dist/` is produced without errors —
+- [x] T002 [P] Run `npm run build` locally and confirm `dist/` is produced without errors —
       pre-flight check that the command `vercel.json` points to actually works
 
 **Checkpoint**: Repo has a committed, correct deployment config ready to be picked up when
@@ -55,18 +55,18 @@ the project is imported into Vercel.
 **Independent Test**: Log into the Vercel dashboard, confirm the `badzwanzen` project is
 listed, linked to the correct GitHub repository, and has one successful deployment.
 
-- [ ] T003 [US2] [Manual] Create a Vercel account at https://vercel.com/signup using
+- [x] T003 [US2] [Manual] Create a Vercel account at https://vercel.com/signup using
       "Continue with GitHub"
-- [ ] T004 [US2] [Manual] Authorize the Vercel GitHub App with access to the `badzwanzen`
+- [x] T004 [US2] [Manual] Authorize the Vercel GitHub App with access to the `badzwanzen`
       repository (depends on T003)
-- [ ] T005 [US2] [Manual] Import the `badzwanzen` repository as a new Vercel project via
+- [x] T005 [US2] [Manual] Import the `badzwanzen` repository as a new Vercel project via
       "Add New" → "Project" (depends on T004)
-- [ ] T006 [US2] [Manual] Confirm the Vercel-detected build settings match `vercel.json`
+- [x] T006 [US2] [Manual] Confirm the Vercel-detected build settings match `vercel.json`
       (Build Command `npm run build`, Output Directory `dist`) under Project Settings →
       Build & Development Settings (depends on T005, T001)
-- [ ] T007 [US2] [Manual] Confirm Production Branch is set to `main` under Project Settings →
+- [x] T007 [US2] [Manual] Confirm Production Branch is set to `main` under Project Settings →
       Git (depends on T005)
-- [ ] T008 [US2] [Manual] Trigger and verify the first production deployment succeeds
+- [x] T008 [US2] [Manual] Trigger and verify the first production deployment succeeds
       (depends on T006, T007)
 
 **Checkpoint**: Vercel project exists and is linked; first deployment is live. User Story 1
@@ -82,17 +82,21 @@ failed build never replaces the live site.
 **Independent Test**: Push a change to `main` and confirm the live URL updates within
 minutes; separately, push a deliberately broken build and confirm production is unaffected.
 
-- [ ] T009 [US1] Push a small test commit to `main` (or merge a test PR) and verify Vercel
-      starts a new production build automatically (depends on T008)
-- [ ] T010 [US1] Verify the production URL reflects the pushed change within ~5 minutes
-      (SC-001) (depends on T009)
-- [ ] T011 [US1] Verify GitHub shows a Vercel deployment status/check on the commit (FR-007,
-      SC-002) (depends on T009)
+- [x] T009 [US1] Push a small test commit to `main` (or merge a test PR) and verify Vercel
+      starts a new production build automatically (depends on T008) — verified via PR #3
+      merge to `main` (commit a62d3ed)
+- [x] T010 [US1] Verify the production URL reflects the pushed change within ~5 minutes
+      (SC-001) (depends on T009) — `badzwanzen.vercel.app` showed the merged change within
+      ~1 minute
+- [x] T011 [US1] Verify GitHub shows a Vercel deployment status/check on the commit (FR-007,
+      SC-002) (depends on T009) — `Vercel` commit status = success on `main` HEAD
 - [ ] T012 [US1] On a throwaway branch, introduce a deliberate build-breaking change (e.g. a
       TypeScript type error), push it, and verify the previous production deployment stays
       live and the broken build is never published (FR-005, SC-003); then discard the
-      change without merging (depends on T008)
-- [ ] T013 [P] [US1] Add a "Deployment" section to `README.md` documenting the live URL and
+      change without merging (depends on T008) — **skipped by user decision** during
+      implementation; relies on Vercel's documented default behavior (failed builds are
+      never promoted to production) instead of an explicit live test
+- [x] T013 [P] [US1] Add a "Deployment" section to `README.md` documenting the live URL and
       how automatic deployment from `main` works (depends on T008)
 
 **Checkpoint**: User Story 1 fully verified — this is the MVP of the feature.
@@ -106,10 +110,12 @@ minutes; separately, push a deliberately broken build and confirm production is 
 **Independent Test**: Open a PR and confirm a preview URL appears as a GitHub check; push a
 follow-up commit and confirm the same URL updates.
 
-- [ ] T014 [US3] Open a test pull request against `main` and verify Vercel posts a unique
-      preview URL as a PR check/comment (depends on T008)
-- [ ] T015 [US3] Push an additional commit to that same PR and verify the same preview URL
-      updates with the new changes (depends on T014)
+- [x] T014 [US3] Open a test pull request against `main` and verify Vercel posts a unique
+      preview URL as a PR check/comment (depends on T008) — verified via PR #3
+      (`badzwanzen-git-005-deployment-badzwanzen.vercel.app`)
+- [x] T015 [US3] Push an additional commit to that same PR and verify the same preview URL
+      updates with the new changes (depends on T014) — verified with the README-doc commit;
+      same preview URL, new deployment
 
 **Checkpoint**: All three user stories independently verified.
 
@@ -117,10 +123,12 @@ follow-up commit and confirm the same URL updates.
 
 ## Phase 5: Polish & Cross-Cutting Concerns
 
-- [ ] T016 Run the full `specs/005-deployment/quickstart.md` walkthrough end-to-end as a
-      final sanity check (depends on T001-T015)
-- [ ] T017 [P] Review `README.md` deployment section for accuracy against what was actually
-      configured (depends on T013)
+- [x] T016 Run the full `specs/005-deployment/quickstart.md` walkthrough end-to-end as a
+      final sanity check (depends on T001-T015) — all steps verified live except the
+      deliberate-build-failure check (T012), skipped by user decision
+- [x] T017 [P] Review `README.md` deployment section for accuracy against what was actually
+      configured (depends on T013) — matches the live setup (Vercel, `vercel.json`, prod +
+      preview behavior)
 
 ---
 
