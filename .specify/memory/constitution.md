@@ -1,33 +1,43 @@
 <!--
 Sync Impact Report
 ==================
-Version change: 1.0.0 → 1.1.0 (MINOR: clarified scope of an existing principle + widened a
-  governance carve-out; no existing requirement was loosened for application code)
+Version change: 1.1.0 → 1.2.0 (MINOR: materially expanded guidance — explicitly sanctions a
+  new testing tool (Playwright) for a testing category the named stack cannot cover; no
+  existing requirement was loosened)
 Modified principles:
-  - II. Test-First (TDD, NON-NEGOTIABLE) — added a scope paragraph: this principle governs
-    application code; internal developer tooling without a natural Vitest/RTL target is
-    exempt from that specific stack requirement but must still define its own deterministic
-    verification procedure, logged via Complexity Tracking. The NON-NEGOTIABLE status for
-    application code is unchanged.
+  - II. Test-First (TDD, NON-NEGOTIABLE) — added a paragraph authorizing Playwright for
+    visual-regression testing (pixel-level screenshot comparison of rendered UI), since jsdom
+    (Vitest's environment) does not perform real rendering and cannot produce pixel output.
+    Playwright supplements, not replaces, Vitest/RTL: it covers only visual-regression
+    assertions on rendered screens; all other testing stays on Vitest/RTL. Reference
+    screenshots MUST be files in the repository (Principle IV — no paid visual-testing SaaS).
+Modified sections:
+  - Technology Constraints — Testing line now explicitly lists Playwright alongside
+    Vitest + React Testing Library, with its scope (visual regression only).
 Added sections: none
 Removed sections: none
-Governance change: the Complexity Tracking justification mechanism, previously scoped to
-  Principles III/IV only, now also covers Principle II's non-application-tooling exemption.
-Trigger: /speckit-analyze on feature 002-git-worktree-setup found that
-  specs/002-git-worktree-setup/plan.md relied on Complexity Tracking to justify skipping
-  Vitest for two bash scripts — a use the Governance section did not yet authorize (it only
-  named Principle III/IV). This amendment closes that gap explicitly rather than leaving the
-  plan resting on an ungoverned interpretation.
+Governance change: none — the existing Complexity Tracking mechanism is unaffected; this
+  amendment instead closes the gap that made Complexity Tracking the wrong tool for this case.
+Trigger: /speckit-analyze on feature 006-playwright-visual-ci (C1, CRITICAL) found that
+  specs/006-playwright-visual-ci/plan.md justified adding Playwright — a tool not named in
+  Technology Constraints' Testing line — via the Complexity Tracking table. Governance only
+  authorizes that table for Principle II's non-application-tooling exemption or III/IV
+  violations, not for expanding a named Technology Constraint. This is structurally the same
+  pattern as the 002-git-worktree-setup precedent recorded in this file's own prior Sync
+  Impact Report: a plan resting on an ungoverned interpretation instead of an explicit
+  amendment. This amendment closes the gap by sanctioning Playwright directly in the
+  constitution, rather than leaving 006-playwright-visual-ci's plan.md as a self-justified
+  deviation.
 Templates requiring updates:
   - .specify/templates/plan-template.md ✅ (generic "Constitution Check" gate remains compatible, no edit needed)
   - .specify/templates/spec-template.md ✅ (no constitution-specific references, no edit needed)
   - .specify/templates/tasks-template.md ✅ (generic structure remains compatible, no edit needed)
   - .claude/skills/speckit-*/SKILL.md ✅ (agent-agnostic, no CLAUDE-only references found)
 Follow-up TODOs:
-  - specs/002-git-worktree-setup/plan.md: update the Constitution Check row for Principle II
-    and the Complexity Tracking table to note the exemption is now explicitly sanctioned
+  - specs/006-playwright-visual-ci/plan.md: update the Constitution Check row for Principle II
+    and the Complexity Tracking table to note that Playwright is now explicitly sanctioned
     (currently phrased as a self-justified deviation) — not done by this command, out of its
-    scope (see /speckit-analyze report for the original finding).
+    scope (see the /speckit-analyze report for the original C1 finding).
 -->
 
 # Badzwanzen Constitution
@@ -62,6 +72,14 @@ verification procedure (e.g., a `quickstart.md` walkthrough run red → green ag
 state) before being considered complete — logged via Complexity Tracking per Governance, not
 silently assumed. This exemption does not extend to the application itself.
 
+Visual-regression testing (pixel-level screenshot comparison of rendered UI screens) is
+explicitly sanctioned via Playwright, since jsdom (Vitest's test environment) does not perform
+real rendering and cannot produce pixel output — a capability gap Vitest/RTL cannot close.
+Playwright supplements this principle's named stack rather than replacing it: it covers only
+visual-regression assertions on already-rendered screens; all other testing (unit, logic,
+component behavior) remains on Vitest/RTL. Reference screenshots MUST be committed as files in
+the repository, not hosted via a paid visual-testing SaaS (Principle IV).
+
 ### III. Simplicity & YAGNI
 
 Build only what the current feature's spec requires. No speculative abstractions, no
@@ -92,7 +110,9 @@ student is here to learn, and it keeps `main` always in a demoable state.
 
 - **Stack**: Vite, React, TailwindCSS, TypeScript-or-JavaScript (decide per project setup, stay
   consistent once chosen).
-- **Testing**: Vitest + React Testing Library.
+- **Testing**: Vitest + React Testing Library (unit/logic and component tests); Playwright,
+  scoped to visual-regression tests only (screenshot comparison of rendered UI against
+  reference images committed in the repository — see Principle II).
 - **Hosting**: Vercel (free tier), deployed as a static site.
 - **Target platform**: mobile-first responsive web (primary use is a single phone/laptop
   screen passed around the group), no native app.
@@ -126,4 +146,4 @@ violation should raise it before merging rather than after. Complexity that viol
 II (only for the non-application-tooling exemption defined in that principle), III, or IV MUST
 be justified in the relevant `plan.md`'s Complexity Tracking table or rejected.
 
-**Version**: 1.1.0 | **Ratified**: 2026-07-25 | **Last Amended**: 2026-07-25
+**Version**: 1.2.0 | **Ratified**: 2026-07-25 | **Last Amended**: 2026-07-26
