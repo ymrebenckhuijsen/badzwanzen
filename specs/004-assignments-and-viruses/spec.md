@@ -17,17 +17,13 @@ placeholder token per targeted player; each token is replaced with one resolved 
 name (in order) before the text is shown, so the group reads names instead of raw tokens (e.g.
 "{player} moet 10 keer opdrukken" becomes "Alice moet 10 keer opdrukken"). "General" card text
 addresses the whole group and contains no placeholder tokens. An assignment is simply a task to
-perform. A virus is a specific,
-ongoing rule the target player(s) must not break, which stays in effect until it is lifted by a
-notification that it no longer applies; this happens after a random number (minimum 10) of
-subsequent assignment/game draws. A virus scores no points automatically — but if the rule is
-broken, the group reports it at that moment and the virus card's own defined penalty points are
-added, which can happen more than once while the same virus is active. More than one virus
-effect may be active at the same time, including more than one on the same player. A "game" is
-usually a more elaborate task than an assignment; the difference is mostly visual — games and
-assignments otherwise work the same way. Assignment, game, and virus content (instruction text)
-is bundled into sets that a session is played with; this content does not need to be editable
-from within the app.
+perform. A virus is a specific, ongoing rule the target player must not break, which stays in
+effect until it is lifted — this happens after a random number (minimum 10) of subsequent
+assignment/game draws. More than one virus effect may be active at the same time, including more
+than one on the same player. A "game" is usually a more elaborate task than an assignment; the
+difference is mostly visual — games and assignments otherwise work the same way. Assignment,
+game, and virus content (instruction text) is bundled into sets that a session is played with;
+this content does not need to be editable from within the app.
 
 Further refined based on additional follow-up clarification: a game session does not draw from
 its entire card set indefinitely. Instead, at the start of each session, a random subset of that
@@ -46,33 +42,49 @@ regardless of how many players its instruction text names when the card is drawn
 "current drawer" role in the system — physically, whoever is holding the shared device triggers
 each draw, but this is a social convention, not application state.
 
+**Scope note (added during the UI design review, 2026-07-27)**: recording assignment/game
+success or failure, reporting virus rule violations, and any resulting penalty-point scoring are
+all explicitly **out of scope** for this feature — deferred to a separate future feature (see
+Clarifications). This feature covers drawing, targeting, displaying card text, and the virus
+effect lifecycle (starting, visibly tracking, and lifting — naturally or forced at session end)
+only. The group is expected to judge/track outcomes and any consequences by other means for now.
+
 ## Clarifications
 
 ### Session 2026-07-26
 
 - Q: When a "specific" card requires more target players than currently exist in the session, what should the system do? → A: Skip this card entirely (discard from the pool) and immediately draw the next one instead.
-- Q: What should the upper bound be for a virus effect's randomly assigned lift threshold (currently only "at least 10", no maximum)? → A: No fixed maximum — keep the current wording (≥10, unbounded); most viruses may end up relying on the forced end-of-session lift (FR-022) rather than lifting naturally.
+- Q: What should the upper bound be for a virus effect's randomly assigned lift threshold (currently only "at least 10", no maximum)? → A: No fixed maximum — keep the current wording (≥10, unbounded); most viruses may end up relying on the forced end-of-session lift (FR-018) rather than lifting naturally.
+
+### Session 2026-07-27 (during `/speckit-design` review)
+
+- Q: Is moving scoring (assignment/game success-fail handling + penalty points) out of this
+  feature a real scope change, or just a simplification of one mockup screen? → A: A real scope
+  change — remove it from this feature's spec/plan/design entirely; a future feature will add
+  it back.
+- Q: Does virus rule-violation reporting (with its penalty points) stay in this feature, since
+  each virus effect already targets exactly one player (no multi-target ambiguity like
+  assignment/game has)? → A: No — violation reporting and its scoring move out too. This
+  feature no longer includes any point-tracking mechanic at all; it only covers drawing,
+  targeting, display, and the virus effect lifecycle (start, visible tracking, lift).
 
 ## User Scenarios & Testing *(mandatory)*
 
 ### User Story 1 - Draw a card and see who it targets (Priority: P1)
 
 Once players have been set up, the group draws cards one at a time from the session's card
-pool (see User Story 5 for how that pool is built). Each card is an assignment, a game, or a
+pool (see User Story 4 for how that pool is built). Each card is an assignment, a game, or a
 virus, and is addressed either to all players (general) or to one or more specific players
-chosen at random from the player set. The group sees the instruction text and, for
-assignment/game cards, records whether it was completed successfully, with penalty points
-applied on failure.
+chosen at random from the player set. The group sees the card's type and instruction text.
 
 **Why this priority**: This is the core, most frequent loop of the game. Without correctly
 drawing a card, resolving its type, and resolving who it targets, there is no game — the virus
 mechanic is a variation layered on top of this base loop.
 
 **Independent Test**: Can be fully tested by drawing a card from a session with several
-players, confirming it is correctly labeled as assignment, game, or virus, confirming its
+players, confirming it is correctly labeled as assignment, game, or virus, and confirming its
 target(s) are resolved correctly (all players for a general card, or the right number of
-randomly chosen players for a specific card), and — for assignment/game cards — confirming a
-failed resolution adds the card's penalty points to the targeted player(s).
+randomly chosen players for a specific card).
 
 **Acceptance Scenarios**:
 
@@ -87,20 +99,15 @@ failed resolution adds the card's penalty points to the targeted player(s).
    tokens, **When** it is displayed, **Then** each token is replaced with one resolved target
    player's name, in order, and no separate list or label of target names is shown in addition
    to the rendered text.
-5. **Given** an assignment or game card has been shown, **When** the group marks it failed,
-   **Then** the card's penalty points are added to the targeted player's (or players') totals.
-6. **Given** an assignment or game card has been shown, **When** the group marks it completed
-   successfully, **Then** no penalty points are added.
 
 ---
 
 ### User Story 2 - Draw a virus card and start an active virus effect (Priority: P2)
 
 The group draws a card that is a virus instead of an assignment or game. Unlike an
-assignment/game, a virus is not resolved immediately as success/failure — it becomes an active,
-ongoing rule on its target player(s) that persists across subsequent draws until it is later
-lifted. More than one virus effect can be active at once, including more than one on the same
-player.
+assignment/game, a virus is not a one-off task — it becomes an active, ongoing rule on its
+target player(s) that persists across subsequent draws until it is later lifted. More than one
+virus effect can be active at once, including more than one on the same player.
 
 **Why this priority**: This is the game's signature twist beyond simple task cards, but it
 depends on the base draw/target loop from User Story 1 already existing.
@@ -108,14 +115,12 @@ depends on the base draw/target loop from User Story 1 already existing.
 **Independent Test**: Can be fully tested by drawing a virus card, confirming its target
 player(s) are resolved the same way as User Story 1 (general or random specific selection), and
 confirming the resulting virus effect remains visibly active — alongside any other already-
-active virus effects, even on the same player — through several subsequent draws rather than
-resolving immediately.
+active virus effects, even on the same player — through several subsequent draws.
 
 **Acceptance Scenarios**:
 
 1. **Given** a drawn card is a virus, **When** its target(s) are resolved (general or specific,
-   as in User Story 1), **Then** an active virus effect is started for those target player(s)
-   instead of asking for a success/failure resolution, and no penalty points are applied yet.
+   as in User Story 1), **Then** an active virus effect is started for those target player(s).
 2. **Given** an active virus effect exists, **When** subsequent assignment/game cards are
    drawn, **Then** the virus effect remains visibly active and its progress toward being lifted
    advances.
@@ -129,36 +134,7 @@ resolving immediately.
 
 ---
 
-### User Story 3 - Report a virus rule violation (Priority: P3)
-
-While a virus effect is active, its target player may break the rule it describes. At the
-moment the group observes this, they report the violation. The specific virus card's own
-defined penalty points are then added to the violating player's total. This can happen more
-than once during the same virus effect's active lifetime, each time adding the points again.
-
-**Why this priority**: This is what gives the virus mechanic teeth — without it, an active
-virus is purely cosmetic. It depends on User Story 2 (an active effect must exist to violate).
-
-**Independent Test**: Can be fully tested by starting a virus effect, reporting a violation
-against it, confirming the virus's penalty points are added to the target player, reporting a
-second violation against the same still-active effect, and confirming the points are added
-again.
-
-**Acceptance Scenarios**:
-
-1. **Given** an active virus effect targeting one or more players, **When** the group reports
-   that a targeted player broke the rule, **Then** that virus card's defined penalty points are
-   added to that player's total.
-2. **Given** a violation has already been reported once for an active virus effect, **When**
-   the group reports another violation for the same still-active effect, **Then** the penalty
-   points are added again, independent of the first report.
-3. **Given** a virus effect has already been lifted, **When** the group attempts to report a
-   violation against it, **Then** the system does not allow it, since the effect is no longer
-   active.
-
----
-
-### User Story 4 - Virus is automatically lifted (Priority: P4)
+### User Story 3 - Virus is automatically lifted (Priority: P3)
 
 An active virus effect ends on its own once a random number (at least 10) of subsequent
 assignment/game cards have been drawn since it started. When that threshold is reached, the
@@ -166,15 +142,14 @@ group is clearly shown a lift card — using text defined specifically for this 
 virus card, distinct from its active-effect instruction text — naming the one player whose
 effect just ended.
 
-**Why this priority**: This closes the loop opened by User Story 2/3. It is lower priority
-because a minimal playable version could ship with virus effects that simply remain active (and
-reportable) for the rest of the session, but automatic lifting is core to how the user described
-the mechanic.
+**Why this priority**: This closes the loop opened by User Story 2. It is lower priority
+because a minimal playable version could ship with virus effects that simply remain active for
+the rest of the session, but automatic lifting is core to how the user described the mechanic.
 
 **Independent Test**: Can be fully tested by starting a virus effect, drawing the required
 number of subsequent assignment/game cards, and confirming a lift card appears (with its
-`{player}` token replaced by the affected player's name), the effect is no longer marked active
-on its target player, and violations can no longer be reported against it.
+`{player}` token replaced by the affected player's name) and the effect is no longer marked
+active on its target player.
 
 **Acceptance Scenarios**:
 
@@ -191,7 +166,7 @@ on its target player, and violations can no longer be reported against it.
 
 ---
 
-### User Story 5 - Build the session's card pool at game start (Priority: P1)
+### User Story 4 - Build the session's card pool at game start (Priority: P1)
 
 When a game session starts, the system does not use the entire card set as its draw source.
 Instead, it randomly selects a subset of that card set's cards — sized to a random number
@@ -202,7 +177,7 @@ User Story 1 draws from for the rest of the session.
 **Why this priority**: Foundational — it defines what "the session's draw pool" actually is for
 a given play-through, including the guarantee that every session has a meaningful number of
 virus cards. Without it, User Story 1 has no bounded pool to draw from or exhaust (User Story
-6), and every session would play identically off the full card set.
+5), and every session would play identically off the full card set.
 
 **Independent Test**: Can be fully tested by starting several sessions from the same underlying
 card set and confirming each produces a pool sized between 60 and 80 cards (inclusive), drawn
@@ -223,15 +198,15 @@ between sessions.
 
 ---
 
-### User Story 6 - Game ends when the card pool is exhausted (Priority: P2)
+### User Story 5 - Game ends when the card pool is exhausted (Priority: P2)
 
 The group keeps drawing one card at a time from the session's pool (User Story 1) until no
 cards remain. At that point, the game session ends: no further draws are possible. Any virus
 effects still active at that moment are automatically lifted, each showing its own lift card
-(User Story 4), so no active effect is left unresolved when the session concludes.
+(User Story 3), so no active effect is left unresolved when the session concludes.
 
 **Why this priority**: Closes the loop opened by removing indefinite reshuffling; depends on
-User Story 1 (the draw loop) and reuses User Story 4's lift mechanism for a forced case.
+User Story 1 (the draw loop) and reuses User Story 3's lift mechanism for a forced case.
 
 **Independent Test**: Can be fully tested by playing a session down to its last pool card and
 confirming the game ends with no further draw possible; separately, by ending a session while
@@ -245,7 +220,7 @@ session is considered ended, even though their thresholds hadn't been reached.
    another card.
 2. **Given** the game session ends with one or more virus effects still active, **When** the
    session ends, **Then** each still-active effect is automatically lifted and its lift card is
-   shown (per User Story 4), regardless of how much progress it had made toward its own lift
+   shown (per User Story 3), regardless of how much progress it had made toward its own lift
    threshold.
 3. **Given** the game session has ended, **When** the group views the game state afterward,
    **Then** no player shows any currently active virus effect.
@@ -263,19 +238,19 @@ session is considered ended, even though their thresholds hadn't been reached.
   possible today (feature 001 only allows removal before play starts). If a future feature adds
   mid-game removal, the expected behavior is that any active virus effects on the removed
   player are automatically lifted at that time, the same way they are at session end (User
-  Story 6) — noted here for forward compatibility; this feature does not implement it.
+  Story 5) — noted here for forward compatibility; this feature does not implement it.
 - What happens when the same virus card definition ends up targeting the same player twice
   concurrently (two independent active effects from the identical virus text)?
 - What happens when a "specific" card's instruction text contains a different number of
   `{player}` placeholder tokens than its own defined target count (a content-authoring
-  mismatch)? Resolved: caught by the build/test-time validation in FR-017, not encountered
+  mismatch)? Resolved: caught by the build/test-time validation in FR-013, not encountered
   during play.
 - What happens if the underlying card set doesn't actually contain at least 80 cards or at
-  least 4 virus cards? Resolved: caught by the build/test-time validation in FR-019, not
+  least 4 virus cards? Resolved: caught by the build/test-time validation in FR-015, not
   encountered during play.
 - What happens when the game session ends while several virus effects are simultaneously
   active — are all their lift cards shown at once? Resolved: each is shown in turn using the
-  same single-effect lift-card mechanism as a normal automatic lift (User Story 6, Acceptance
+  same single-effect lift-card mechanism as a normal automatic lift (User Story 5, Acceptance
   Scenario 2).
 
 ## Requirements *(mandatory)*
@@ -283,16 +258,16 @@ session is considered ended, even though their thresholds hadn't been reached.
 ### Functional Requirements
 
 - **FR-001**: System MUST allow the group to draw one card at a time (assignment, game, or
-  virus) from the current session's draw pool (see FR-020), without requiring a fixed
+  virus) from the current session's draw pool (see FR-016), without requiring a fixed
   per-player turn order to do so.
 - **FR-002**: System MUST determine, for each drawn card, whether it targets all players
   (general) or a specific number of players, per that card's own definition.
 - **FR-003**: For a "specific" card, system MUST randomly select the card's required number of
   target player(s) from the current player set (added via the existing player-management
   feature) at the moment it is drawn. If the current player set has fewer players than the
-  card's required target count, system MUST discard the card unresolved (no display, no
-  penalty, no virus effect started, and it does not count toward FR-009's lift-threshold
-  progress) and immediately draw the next card from the pool in its place.
+  card's required target count, system MUST discard the card unresolved (no display, and it
+  does not count toward FR-008's lift-threshold progress) and immediately draw the next card
+  from the pool in its place.
 - **FR-004**: System MUST display each drawn card's instruction text. For a "general" card, the
   display MUST clearly indicate it applies to all players (e.g. a category label), since no
   individual player is named. For a "specific" card, the resolved target player(s) MUST be
@@ -304,62 +279,55 @@ session is considered ended, even though their thresholds hadn't been reached.
   displaying it, so the group reads names rather than raw tokens. "General" card text contains
   no placeholder tokens and is shown as authored. This substitution is the only mechanism by
   which a specific card's targets are named on screen (see FR-004).
-- **FR-006**: System MUST visually distinguish "game" cards from plain "assignment" cards,
-  while resolving both the same way functionally (see FR-007).
-- **FR-007**: For assignment and game cards, system MUST allow the group to record the
-  target player's (or players') success or failure, and MUST add the card's penalty points to
-  the relevant player total(s) when marked failed; MUST add no penalty when marked successful.
-- **FR-008**: For a virus card, system MUST start an active virus effect on the resolved target
-  player(s) instead of requesting a success/failure resolution, and MUST NOT apply any penalty
-  points automatically when the effect starts.
-- **FR-009**: System MUST assign each newly-started virus effect a randomly chosen lift
+- **FR-006**: System MUST visually distinguish "game" cards from plain "assignment" cards.
+  Beyond this visual distinction, this feature does not otherwise differentiate how the two are
+  drawn, targeted, or displayed.
+- **FR-007**: For a virus card, system MUST start an active virus effect on the resolved target
+  player(s) rather than treating it as a one-off task.
+- **FR-008**: System MUST assign each newly-started virus effect a randomly chosen lift
   threshold of at least 10 subsequent assignment/game draws, with no fixed maximum (confirmed
   in Clarifications — a wide/unbounded range is intentional, not an oversight), and MUST track
   progress toward that threshold as such cards are drawn.
-- **FR-010**: System MUST automatically end an active virus effect once its lift threshold has
+- **FR-009**: System MUST automatically end an active virus effect once its lift threshold has
   been reached, and MUST show the group a dedicated lift card — using the lift text defined on
-  that virus card (see FR-018), with its `{player}` token replaced by the affected player's
+  that virus card (see FR-014), with its `{player}` token replaced by the affected player's
   name — clearly indicating that player's virus no longer applies.
-- **FR-011**: System MUST visibly indicate, at all times, every player with one or more
+- **FR-010**: System MUST visibly indicate, at all times, every player with one or more
   currently active virus effects, and which effect(s) each is, in a layout that remains legible
   and usable on a single mobile phone screen even when several effects are active at once.
-- **FR-012**: System MUST allow more than one virus effect to be active at the same time,
+- **FR-011**: System MUST allow more than one virus effect to be active at the same time,
   including more than one active effect on the same player simultaneously and independently.
-- **FR-013**: System MUST allow the group to report a rule violation against any currently
-  active virus effect at any time while it remains active, and MUST add that virus card's
-  defined penalty point value to the target player's (or players') total each time a violation
-  is recorded.
-- **FR-014**: System MUST support recording multiple, separate violations against the same
-  active virus effect over its lifetime, applying the penalty points again each time.
-- **FR-015**: System MUST NOT allow a violation to be recorded against a virus effect that has
-  already been lifted.
-- **FR-016**: System MUST organize assignment, game, and virus content into named sets that a
+- **FR-012**: System MUST organize assignment, game, and virus content into named sets that a
   session is played with. Editing this content from within the app is out of scope for this
   feature.
-- **FR-017**: Since card set content is fixed, static data authored at build time (not runtime),
+- **FR-013**: Since card set content is fixed, static data authored at build time (not runtime),
   system MUST provide an automated, build/test-time validation that checks every "specific"
   card's instruction text contains exactly one `{player}` token per target required by that
   card's own targeting count (and that "general" cards contain none), and that fails (reporting
   which card(s) are wrong) if any card set violates this — so a content mismatch is caught
   before it reaches players, rather than at runtime.
-- **FR-018**: System MUST provide the same kind of build/test-time validation for every virus
+- **FR-014**: System MUST provide the same kind of build/test-time validation for every virus
   card's lift text: it MUST contain exactly one `{player}` token, since a lift event always
   concerns exactly one player regardless of how many players the card's instruction text names
   when drawn.
-- **FR-019**: System MUST provide a build/test-time validation that each card set contains at
+- **FR-015**: System MUST provide a build/test-time validation that each card set contains at
   least 80 cards in total and at least 4 cards of type "virus", failing (reporting the
-  shortfall) if not — so that the random pool selection in FR-020 can always be satisfied.
-- **FR-020**: At the start of a game session, system MUST randomly select a subset of the
+  shortfall) if not — so that the random pool selection in FR-016 can always be satisfied.
+- **FR-016**: At the start of a game session, system MUST randomly select a subset of the
   session's card set to form that session's draw pool, sized to a randomly chosen number of
   cards between 60 and 80 (inclusive), and MUST guarantee at least 4 of the selected cards are
   of type "virus".
-- **FR-021**: System MUST draw cards from the session's pool one at a time, fully at random
+- **FR-017**: System MUST draw cards from the session's pool one at a time, fully at random
   with no predetermined order, without replacement (each pool card is drawn at most once per
   session). Once the pool is exhausted, system MUST end the game session — no further draws
   are possible.
-- **FR-022**: When the game session ends (FR-021), system MUST automatically lift every
+- **FR-018**: When the game session ends (FR-017), system MUST automatically lift every
   still-active virus effect regardless of its remaining lift-threshold progress, showing each
-  one's lift card (per FR-010) as part of ending the session.
+  one's lift card (per FR-009) as part of ending the session.
+
+**Out of scope for this feature** (deferred to a future feature, see Clarifications):
+recording assignment/game success or failure; reporting virus rule violations; any resulting
+penalty-point scoring or totals.
 
 ### Key Entities
 
@@ -371,9 +339,7 @@ session is considered ended, even though their thresholds hadn't been reached.
   placeholder tokens. Virus cards additionally define a **lift text** — a separate text, used
   only when a specific active effect from this card is lifted, containing exactly one `{player}`
   token (a lift always concerns exactly one player, regardless of the original targeting count).
-  Assignment and game cards have no lift text; it does not apply to them. Assignment and game
-  cards define a penalty point value applied on failure; virus cards define a penalty point
-  value applied each time a violation against them is reported.
+  Assignment and game cards have no lift text; it does not apply to them.
 - **Card Set**: A named, bundled collection of assignment, game, and virus card definitions that
   a session is played with. Not editable from within the app. Must contain at least 80 cards in
   total, of which at least 4 are of type "virus", so that a session's randomly-sized draw pool
@@ -384,17 +350,17 @@ session is considered ended, even though their thresholds hadn't been reached.
   exhausted, at which point the session ends.
 - **Drawn Card**: The record of a card having been drawn during play, including its resolved
   target player(s) (all players for a general card, or the randomly chosen player(s) for a
-  specific card) and, for assignment/game cards, its success/failure outcome.
+  specific card).
 - **Active Virus Effect**: The ongoing state created when a virus card is drawn: its target
-  player, its progress toward a randomly assigned lift threshold (at least 10 subsequent
-  assignment/game draws), and the count/history of violations reported against it while active.
-  Ends either by reaching its threshold or by being force-lifted when the game session ends
-  (and, in the future, potentially when its target player is removed mid-game — see Edge
-  Cases); either way, ending it shows the virus card's lift text naming that player. A player
-  may be the target of multiple concurrent, fully independent active virus effects.
-- **Player**: An existing entity (added via the game's player list, feature 001) that
-  accumulates penalty points from failed assignment/game cards and from reported virus
-  violations, and may be the target of multiple simultaneously active virus effects.
+  player, and its progress toward a randomly assigned lift threshold (at least 10 subsequent
+  assignment/game draws). Ends either by reaching its threshold or by being force-lifted when
+  the game session ends (and, in the future, potentially when its target player is removed
+  mid-game — see Edge Cases); either way, ending it shows the virus card's lift text naming that
+  player. A player may be the target of multiple concurrent, fully independent active virus
+  effects.
+- **Player**: An existing entity (added via the game's player list, feature 001), reused as-is.
+  May be the target of one or more drawn cards and of multiple simultaneously active virus
+  effects. This feature does not add any scoring/points fields to it.
 
 ## Success Criteria *(mandatory)*
 
@@ -409,16 +375,13 @@ session is considered ended, even though their thresholds hadn't been reached.
   simultaneously active.
 - **SC-004**: When a virus effect lifts, a clear lift card is shown on-screen in 100% of cases,
   without requiring an explanation from other players.
-- **SC-005**: 100% of reported virus violations apply exactly the reporting virus's defined
-  penalty point value to the correct target player(s), regardless of how many other virus
-  effects or prior violations are simultaneously active or already recorded.
-- **SC-006**: The active-virus-effects display remains fully legible and usable on a single
+- **SC-005**: The active-virus-effects display remains fully legible and usable on a single
   mobile-phone-sized screen even with 5 or more concurrent effects across different players,
   via a compact/summarized layout rather than one full-detail block per effect.
-- **SC-007**: 100% of game sessions start with a draw pool sized between 60 and 80 cards
+- **SC-006**: 100% of game sessions start with a draw pool sized between 60 and 80 cards
   inclusive, containing at least 4 virus-type cards, regardless of how large or how
   virus-heavy the underlying card set is.
-- **SC-008**: 100% of virus effects still active when a session's pool is exhausted are shown
+- **SC-007**: 100% of virus effects still active when a session's pool is exhausted are shown
   as lifted (via their own lift card) by the time the session is considered ended — none are
   left silently active.
 
@@ -428,8 +391,8 @@ session is considered ended, even though their thresholds hadn't been reached.
   tracked by the system at all; any player in the group can trigger the next draw (in practice,
   whoever is holding the shared device), and each card's own definition (general, or specific
   with a target count) determines who it applies to via random selection at draw time.
-- "Game" cards are functionally identical to "assignment" cards (same success/failure and
-  penalty-point handling) and differ only in visual presentation/labeling.
+- "Game" cards are functionally identical to "assignment" cards for everything this feature
+  does (drawing, targeting, display) and differ only in visual presentation/labeling.
 - Only assignment and game draws advance an active virus effect's lift-threshold progress;
   drawing a virus card does not itself count toward any other active virus effect's threshold.
 - The number of target players required by a "specific" card (one or more) is fixed, static
@@ -439,31 +402,33 @@ session is considered ended, even though their thresholds hadn't been reached.
   card's separate lift text always has exactly one `{player}` token regardless of that count,
   since a lift always concerns one player. Keeping token counts in sync with target counts is a
   content-authoring responsibility, consistent with card content being out-of-scope static seed
-  data for this feature — enforced via the build/test-time validations in FR-017 and FR-018
+  data for this feature — enforced via the build/test-time validations in FR-013 and FR-014
   rather than left to manual review.
 - Since a "specific" card's target names only ever appear via its own rendered `{player}`
   tokens (FR-004, FR-005), a card that omits a token for one of its required targets simply
-  never names that target on screen — this is exactly the kind of authoring mistake FR-017's
+  never names that target on screen — this is exactly the kind of authoring mistake FR-013's
   validation exists to catch before it ships.
 - A session's draw pool is built once, at session start, by first guaranteeing at least 4
   randomly chosen virus cards are included, then filling the remainder up to the session's
   randomly chosen total size (60-80) with cards drawn at random from the rest of the card set
   (which may include additional virus cards beyond the guaranteed 4). No other type-balance
   constraint (e.g. a minimum number of assignment cards) is required.
-- What happens at the moment a game session ends beyond ending the draw loop and lifting active
-  virus effects (e.g. a final score/summary screen) is out of scope for this feature.
 - A virus effect's lift threshold has no upper bound beyond "at least 10" (confirmed in
   Clarifications); since a session's pool is capped at 60-80 cards, a meaningful share of
   active virus effects — especially any drawn later in the session — may end up force-lifted at
-  session end (FR-022) rather than reaching their own threshold naturally. This is accepted as
+  session end (FR-018) rather than reaching their own threshold naturally. This is accepted as
   intentional game balance, not a defect.
-- Card/content authoring (the actual instruction texts, lift texts, penalty values, target
-  counts, and which sets are played with) is out of scope for this feature; it is treated as
-  static seed data the drawing/targeting/virus/pool-building mechanics consume, consistent with
-  "questions don't need to be editable via the app."
+- What happens at the moment a game session ends beyond ending the draw loop and lifting active
+  virus effects (e.g. a final score/summary screen) is out of scope for this feature.
+- Card/content authoring (the actual instruction texts, lift texts, target counts, and which
+  sets are played with) is out of scope for this feature; it is treated as static seed data the
+  drawing/targeting/virus/pool-building mechanics consume, consistent with "questions don't
+  need to be editable via the app."
 - Multiple concurrent virus effects — including duplicate instances of the same virus card
-  definition — may be independently active on the same player at once; each is tracked, scored,
-  and lifted completely independently of the others.
-- The existing player list and penalty point totals (from feature 001 and the base game) are
-  reused as-is; this feature adds card targeting, active virus effects, and violation-based
-  scoring on top of that existing scoring mechanism rather than replacing it.
+  definition — may be independently active on the same player at once; each is tracked and
+  lifted completely independently of the others.
+- **Recording assignment/game success or failure, reporting virus rule violations, and any
+  resulting penalty-point scoring are entirely out of scope for this feature** (see
+  Clarifications, 2026-07-27) — deferred to a separate future feature. This feature reuses the
+  existing player list from feature 001 as-is but does not add any scoring mechanism on top of
+  it; the group tracks outcomes/consequences by other means for now.

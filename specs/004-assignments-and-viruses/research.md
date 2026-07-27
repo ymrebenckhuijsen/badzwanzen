@@ -7,34 +7,55 @@ those decisions so `data-model.md` and `tasks.md` have a single, consistent desi
 from. None of these decisions contradict an acceptance scenario or functional requirement;
 they fill gaps the spec left to planning.
 
+## Decision: scoring (success/fail recording + virus violation reporting) is entirely out of scope
+
+**Decision**: This feature does not record assignment/game success or failure, does not offer a
+way to report a virus rule violation, and has no penalty-point or scoring mechanism of any
+kind. It covers only: drawing, targeting, displaying card text, and the virus effect lifecycle
+(start, visible tracking, lift — natural or forced). A separate future feature will add scoring
+back for both assignment/game outcomes and virus violations.
+
+**Rationale**: Raised and confirmed with the user during the `/speckit-design` UI review
+(2026-07-27, see spec.md Clarifications) — reviewing the first mockup screen surfaced that
+success/fail scoring is materially harder to design correctly once a card can target multiple
+players at once ("dit wat lastiger is als er meerdere mensen zijn die het doelwit van een vraag
+zijn"), and the user chose to defer *all* scoring — including virus violations, even though
+each virus effect already resolves to exactly one player and doesn't have that same multi-target
+ambiguity — rather than split the scope inconsistently between assignment/game and virus. This
+superseded an earlier draft of this plan (and of `data-model.md`) that included a `PenaltyPoints`
+entity, a `DrawnCard.outcome` field, and an `ActiveVirusEffect.violationCount` field/lifecycle —
+all now removed.
+
+**Consequence for future work**: when the deferred scoring feature is built, it will need its
+own design pass for the multi-target case this decision sidesteps (e.g., does a failed
+multi-target assignment penalize all targets equally, or can the group mark them individually?)
+— that question is explicitly not answered here.
+
 ## Decision: one Active Virus Effect per targeted player, not per draw
 
 **Decision**: When a virus card's targeting rule is "specific" with a count > 1, the draw
 creates **one independent Active Virus Effect per resolved target player**, each with its own
-independently randomized lift threshold, its own progress counter, and its own violation
-history — rather than one shared effect object referencing multiple players.
+independently randomized lift threshold and its own progress counter — rather than one shared
+effect object referencing multiple players.
 
 **Rationale**: The spec's language is consistently player-centric, not draw-centric:
-Assumptions state effects are "tracked, scored, and lifted completely independently of the
-others" even when duplicated on the same player; US2 AC4 requires showing "every currently
-affected player and their active effect(s)"; the Edge Cases section explicitly expects the same
-virus definition to produce two independent concurrent effects on the same player. Modeling one
-effect per player is the simplest structure that satisfies all of this without a secondary
-"which of the effect's several targets does this violation apply to" resolution step that the
-spec never describes. It's also what makes a single, always-one-player lift text (FR-018)
-well-defined regardless of the original card's targeting count.
+Assumptions state effects are "tracked and lifted completely independently of the others" even
+when duplicated on the same player; US2 AC4 requires showing "every currently affected player
+and their active effect(s)"; the Edge Cases section explicitly expects the same virus definition
+to produce two independent concurrent effects on the same player. Modeling one effect per player
+is the simplest structure that satisfies all of this. It's also what makes a single,
+always-one-player lift text (FR-014) well-defined regardless of the original card's targeting
+count.
 
 **Alternatives considered**: A single effect object holding a list of target players was
-considered, but it would require an extra UI step (picking which target violated) that no
-acceptance scenario mentions, and would complicate independent per-player lifting (US4) since a
-shared threshold/progress would have to somehow apply to multiple players who may have joined
-the game session at different penalty totals.
+considered, but it would complicate independent per-player lifting (US3) since a shared
+threshold/progress would have to somehow apply to multiple players independently.
 
 ## Decision: specific-card target count exceeding available players discards the card and redraws
 
 **Decision**: If a "specific" card's required target count exceeds the number of players
-currently in the session, the card is discarded unresolved — not shown, no penalty, no virus
-effect started, and it does not count toward FR-009's lift-threshold progress — and the system
+currently in the session, the card is discarded unresolved — not shown, no virus effect
+started, and it does not count toward FR-008's lift-threshold progress — and the system
 immediately draws the next card from the pool in its place. The discarded card is still
 permanently removed from `SessionCardPool.remainingCardIds` (its single draw is consumed); it is
 never revisited, since the player set is fixed for the whole session (no addition, and removal
@@ -47,7 +68,7 @@ draft decision (clamping target count down to the available players). Clamping i
 used: the user explicitly chose "skip this card entirely and draw the next one" over clamping,
 an error state, or a build-time validation error.
 
-**Why "infinite-skip" isn't a real risk here**: since FR-019 guarantees the underlying card set
+**Why "infinite-skip" isn't a real risk here**: since FR-015 guarantees the underlying card set
 has at least 80 cards and the player set only ever shrinks toward feature 001's 2-player
 minimum, at most a bounded number of cards in the set can exceed 2 required targets — discarding
 them still terminates in at most `pool size` steps (the pool itself is finite, 60-80 cards, and
@@ -62,7 +83,7 @@ subsequent assignment/game draws); no maximum is imposed.
 candidate ambiguities raised at that point) rather than assumed — the user explicitly preferred
 leaving this unbounded over introducing a cap (e.g. 10-30). The accepted consequence, also
 recorded in the spec's Assumptions, is that a meaningful share of active virus effects —
-especially ones drawn later in a session — may end up force-lifted at session end (FR-022)
+especially ones drawn later in a session — may end up force-lifted at session end (FR-018)
 rather than reaching their own threshold naturally within a 60-80 card session. This is treated
 as intentional game balance, not something this feature needs to guard against.
 
@@ -119,10 +140,10 @@ lift text specifically.
 for every card in the set:
 
 - if `type !== "virus"`: `instructionText`'s `{player}` token count matches `targeting.count`
-  (0 for general, `count` for specific) — FR-017.
-- if `type === "virus"`: the same check on `instructionText` (FR-017), **and** `liftText`
-  contains exactly one `{player}` token (FR-018).
-- across the whole set: at least 80 cards total and at least 4 of type `"virus"` (FR-019).
+  (0 for general, `count` for specific) — FR-013.
+- if `type === "virus"`: the same check on `instructionText` (FR-013), **and** `liftText`
+  contains exactly one `{player}` token (FR-014).
+- across the whole set: at least 80 cards total and at least 4 of type `"virus"` (FR-015).
 
 A Vitest test (`seed-card-set.test.ts`) runs this validator against the actual seed data and
 fails (listing the offending card id(s) or set-level shortfall) if any check doesn't pass. No
@@ -148,23 +169,23 @@ separate "who was cured" label.
 **Rationale**: Explicit user instruction — names must only ever appear where the card's own
 text puts them, avoiding redundant/duplicate name display. This also means a card that forgets a
 `{player}` token for one of its resolved targets will visibly fail to name that target on
-screen, which is precisely the authoring mistake FR-017/FR-018's validators exist to catch
+screen, which is precisely the authoring mistake FR-013/FR-014's validators exist to catch
 before it ships.
 
 ## Decision: session card pool is built by guaranteeing viruses first, then filling randomly
 
-**Decision**: Building a session's draw pool (FR-020) works in two steps: (1) randomly choose
+**Decision**: Building a session's draw pool (FR-016) works in two steps: (1) randomly choose
 the pool's total size, an integer in `[60, 80]`; (2) randomly select at least 4 virus cards from
 the card set's virus cards, then fill the remaining slots by randomly selecting from the rest of
 the card set's cards (any type, which may include more virus cards than the guaranteed 4),
 without duplicates. The resulting pool is then shuffled as a whole before play (though since
-FR-021 draws fully at random anyway, pre-shuffling is an implementation convenience, not a
+FR-017 draws fully at random anyway, pre-shuffling is an implementation convenience, not a
 correctness requirement).
 
-**Rationale**: "Guarantee then fill" always succeeds in one pass given FR-019's build-time
+**Rationale**: "Guarantee then fill" always succeeds in one pass given FR-015's build-time
 guarantee (≥80 cards, ≥4 virus cards exist), unlike a "sample N cards uniformly, then check if
 ≥4 are virus, retry if not" approach, which could in theory retry indefinitely on a
-pathologically virus-sparse set and adds complexity (a retry loop) for no benefit given FR-019
+pathologically virus-sparse set and adds complexity (a retry loop) for no benefit given FR-015
 already guarantees the simpler approach always works.
 
 **Alternatives considered**: Uniform sampling with a post-hoc virus-count check and retry was
@@ -173,9 +194,9 @@ is both simpler and always terminates in one pass).
 
 ## Decision: pool exhaustion ends the session; virus progress is never reshuffled away
 
-**Decision**: There is no reshuffle. The session's pool (FR-020) is drawn from without
-replacement (FR-021); once empty, the game session ends (FR-021) and any still-active virus
-effects are force-lifted as part of ending it (FR-022), each showing its lift card. This
+**Decision**: There is no reshuffle. The session's pool (FR-016) is drawn from without
+replacement (FR-017); once empty, the game session ends (FR-017) and any still-active virus
+effects are force-lifted as part of ending it (FR-018), each showing its lift card. This
 supersedes an earlier draft of this plan, which had the pool reshuffle indefinitely — the user
 subsequently clarified that a session has a bounded card pool and ends when it runs out.
 
@@ -204,7 +225,7 @@ tie-breaker (creation order) was chosen over inventing a priority scheme.
 expanding a player's row, not shown by default.
 
 **Rationale**: The user asked explicitly for the active-virus display to "fit the intended
-screen size... in a nice way." With multiple concurrent effects (SC-006 requires legibility
+screen size... in a nice way." With multiple concurrent effects (SC-005 requires legibility
 with 5+), one full-detail block per effect would overflow a phone screen quickly; grouping by
 player caps the default list length at the number of *affected players* (≤ player count, ≤ 20)
 rather than the number of *effects* (unbounded in principle), and matches how the group
@@ -212,8 +233,8 @@ actually cares about this information during play ("who currently has a virus" f
 "which one(s) exactly" second).
 
 **Alternatives considered**: A flat scrollable list of all effects was considered simpler to
-build, but rejected against SC-006's explicit legibility requirement — an unbounded flat list is
-the exact failure mode SC-006 exists to prevent.
+build, but rejected against SC-005's explicit legibility requirement — an unbounded flat list is
+the exact failure mode SC-005 exists to prevent.
 
 ## Contracts
 
@@ -224,5 +245,6 @@ own `App.tsx`, consistent with how feature 001 was planned.
 ## Summary of resolved unknowns
 
 All Technical Context fields were already known from feature 001's established stack; the
-open questions were the design decisions above (spanning both the original planning pass and
-this round of refinements), all now resolved.
+open questions were the design decisions above (spanning the original planning pass, the
+`/speckit-clarify` round, and the `/speckit-design` review that removed scoring from scope), all
+now resolved.

@@ -4,29 +4,33 @@ Validation guide for this feature once implemented. Assumes feature 001 (player 
 merged and a session already has a player list. See [data-model.md](./data-model.md) for entity
 shapes and [research.md](./research.md) for design decisions referenced below.
 
+**Scope note**: this feature has no scoring — no success/fail recording, no virus violation
+reporting, no penalty points (see spec.md Clarifications, 2026-07-27). None of the scenarios
+below exercise anything score-related.
+
 ## Prerequisites
 
 - `npm install`
 - `npm run dev` (or `npm test` for the scenarios below, run non-interactively via Vitest)
 - A session with at least 2 players (from feature 001) and a seeded card set containing at
-  least 80 cards, of which at least 4 are type "virus" (FR-019), including: one "general"
+  least 80 cards, of which at least 4 are type "virus" (FR-015), including: one "general"
   assignment card, one "specific" (count 1) game card with a `{player}` token in its text, at
   least one "specific" (count 1) virus card with a `{player}` token in both its
   `instructionText` and its `liftText`, and one "specific, count: 3" card (of any type) to
-  exercise Scenario 3 below — each with a distinct `penaltyPoints` value.
+  exercise Scenario 3 below.
 
-## Scenario 1 — Build the session's card pool (User Story 5, FR-019, FR-020)
+## Scenario 1 — Build the session's card pool (User Story 4, FR-015, FR-016)
 
 1. Start a new game session from the seeded card set.
 2. **Expect**: a draw pool is created containing a randomly chosen number of cards between 60
    and 80 (inclusive), all drawn from the seeded set, with at least 4 of them being virus cards
-   (SC-007).
+   (SC-006).
 3. Start a second session from the same card set.
 4. **Expect**: the new pool's size and/or specific composition may differ from the first
    session's — each session's pool is independently randomized (research.md "guarantee then
    fill" decision).
 
-## Scenario 2 — Draw and resolve an assignment card (User Story 1, FR-001–FR-007)
+## Scenario 2 — Draw and see a card (User Story 1, FR-001–FR-005)
 
 1. Trigger a draw from the session's pool.
 2. **Expect**: the card's type and instruction text are shown (SC-001, SC-002). For a "general"
@@ -34,25 +38,24 @@ shapes and [research.md](./research.md) for design decisions referenced below.
    are shown replaced by the resolved target players' names, in order (FR-005) — and that
    rendered text is the *only* place target names appear; no separate "Targets: ..." list or
    badge is additionally shown (FR-004).
-3. Mark the card **failed**.
-4. **Expect**: the card's `penaltyPoints` are added to every targeted player's total exactly
-   once (FR-007).
-5. Draw again, resolve as **success**.
-6. **Expect**: no penalty points are added.
+3. Draw again.
+4. **Expect**: a different (or, if the pool happens to repeat a type, at least independently
+   resolved) card is shown the same way — there is no success/fail control or any other outcome
+   step in this feature (scope note above).
 
 ## Scenario 3 — A specific card requiring too many targets is discarded and redrawn (FR-003, clarified 2026-07-26)
 
 1. Use a session with exactly 2 players and a pool containing a "specific, count: 3" card.
 2. Draw until that card comes up.
-3. **Expect**: it is never shown to the group — no instruction text, no penalty, no virus
-   effect starts, and it does not advance any active virus effect's
-   `assignmentGameDrawsSinceStart`. The system immediately draws and shows the next card
-   instead, with no manual action needed to skip past it.
+3. **Expect**: it is never shown to the group — no instruction text, no virus effect starts,
+   and it does not advance any active virus effect's `assignmentGameDrawsSinceStart`. The
+   system immediately draws and shows the next card instead, with no manual action needed to
+   skip past it.
 4. **Expect**: the discarded card's id is still removed from the pool's remaining cards (it
    counts toward exhausting the pool, same as an ordinarily-resolved draw) — it is never
    revisited later in the same session (data-model.md "Discarded draws").
 
-## Scenario 4 — Exhaust the pool and end the game (User Story 6, FR-021)
+## Scenario 4 — Exhaust the pool and end the game (User Story 5, FR-017)
 
 1. Draw every card in the session's pool (built in Scenario 1) exactly once (including any
    discarded per Scenario 3).
@@ -61,52 +64,41 @@ shapes and [research.md](./research.md) for design decisions referenced below.
    Unlike an earlier draft of this feature, there is **no** reshuffle; the pool is not
    replenished.
 
-## Scenario 5 — Start and track an active virus effect (User Story 2, FR-008–FR-012)
+## Scenario 5 — Start and track an active virus effect (User Story 2, FR-007–FR-011)
 
 1. Draw the virus card.
-2. **Expect**: no success/fail prompt is shown; instead an active virus effect appears for its
-   resolved target player(s), with no penalty points applied yet (FR-008).
+2. **Expect**: instead of a plain instruction display, an active virus effect appears for its
+   resolved target player(s) (FR-007).
 3. Draw several more assignment/game cards.
 4. **Expect**: the active effect remains visible throughout, and (per data-model.md) its
    internal `assignmentGameDrawsSinceStart` advances with each one.
 5. Draw the same virus card again (or another virus card) targeting the same player.
 6. **Expect**: a second, independent active effect appears for that player — the first effect
-   is untouched (FR-012; research.md "one effect per targeted player" decision).
+   is untouched (FR-011; research.md "one effect per targeted player" decision).
 
-## Scenario 6 — Report a virus violation (User Story 3, FR-013–FR-015)
-
-1. With an active virus effect from Scenario 5, report a rule violation against it.
-2. **Expect**: that effect's `penaltyPoints` are added to its target player's total.
-3. Report a second violation against the same still-active effect.
-4. **Expect**: the points are added again (FR-014).
-5. Drive the effect to lift (Scenario 7), then attempt to report a violation against it.
-6. **Expect**: the system refuses — no violation is recorded (FR-015).
-
-## Scenario 7 — Automatic virus lift shows a lift card (User Story 4, FR-009–FR-010)
+## Scenario 6 — Automatic virus lift shows a lift card (User Story 3, FR-008–FR-009)
 
 1. Start a fresh virus effect and note its randomly assigned `liftThreshold` (≥10). There is no
    upper bound on this value (confirmed 2026-07-26) — a large threshold is valid and simply
-   means that effect will likely be force-lifted at session end instead (Scenario 8).
+   means that effect will likely be force-lifted at session end instead (Scenario 7).
 2. Draw exactly that many subsequent assignment/game cards (virus draws in between do not
    count, per spec Assumptions).
 3. **Expect**: on reaching the threshold, a lift card is shown using that virus's own defined
    `liftText`, with its one `{player}` token replaced by the affected player's name (SC-004),
    and the effect no longer appears among that player's active effects (other active effects on
    the same player, if any, remain shown).
-4. Attempt to report a violation against the just-lifted effect.
-5. **Expect**: refused, same as Scenario 6 step 6.
 
-## Scenario 8 — Viruses are force-lifted when the game ends (User Story 6, FR-022)
+## Scenario 7 — Viruses are force-lifted when the game ends (User Story 5, FR-018)
 
 1. Start one or more virus effects that are still well short of their `liftThreshold`.
 2. Continue drawing until the session's pool is exhausted (Scenario 4).
 3. **Expect**: every still-active effect is automatically lifted as the session ends, each
-   showing its own lift card (same mechanism as Scenario 7), regardless of how little progress
-   it had made toward its threshold (SC-008).
+   showing its own lift card (same mechanism as Scenario 6), regardless of how little progress
+   it had made toward its threshold (SC-007).
 4. If more than one effect was force-lifted, **expect** their lift cards to appear one at a
    time, ordered oldest-started-first (research.md decision) — not as a single combined message.
 
-## Scenario 9 — Multiple concurrent effects fit a mobile screen (FR-011, SC-006)
+## Scenario 8 — Multiple concurrent effects fit a mobile screen (FR-010, SC-005)
 
 1. Start virus effects targeting at least two different players, plus a second effect on one
    of those same players (three effects total, per Scenario 5 step 6).
@@ -115,7 +107,7 @@ shapes and [research.md](./research.md) for design decisions referenced below.
    count badge for players with multiple effects, rather than one full-detail block per raw
    effect (research.md "per-player summary" decision) — even as more effects are added.
 
-## Scenario 10 — Card set validation (User Story 5 support, FR-017, FR-018, FR-019)
+## Scenario 9 — Card set validation (User Story 4 support, FR-013, FR-014, FR-015)
 
 This one runs as an automated test, not a manual play session — it's the build/test-time gate,
 not a runtime behavior.
