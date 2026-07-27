@@ -10,7 +10,18 @@ npm run dev      # start the Vite dev server
 npm run build    # type-check and build for production
 npm run lint     # lint with oxlint
 npm test         # run the Vitest test suite
+npm run test:visual         # run the Playwright visual-regression tests
+npm run test:visual:update  # update the visual reference screenshots
 ```
+
+## Visuele tests
+
+CI vergelijkt screenshots van de belangrijkste schermen met goedgekeurde referentiebeelden om
+onbedoelde visuele regressies op te vangen. Zie
+[specs/006-playwright-visual-ci/quickstart.md](specs/006-playwright-visual-ci/quickstart.md)
+voor de installatie- en validatiestappen, en
+[contracts/visual-test-conventions.md](specs/006-playwright-visual-ci/contracts/visual-test-conventions.md)
+voor de conventies rond nieuwe schermen en het bijwerken van referentiebeelden.
 
 ## Deployment
 
