@@ -61,7 +61,7 @@ goedgekeurde referentiebeeld.
 ### Implementation for User Story 1
 
 - [X] T004 [US1] Schrijf `tests/visual/player-setup.spec.ts`: render de app (`PlayerSetupScreen` in standaard/initiële staat) en assert `expect(page).toHaveScreenshot('player-setup.png')` (depends on T003)
-- [ ] T005 [US1] Genereer en commit het initiële Linux-referentiebeeld via Playwright's officiële Docker-image, per quickstart.md § 2 (`tests/visual/player-setup.spec.ts-snapshots/player-setup-chromium-linux.png`) (depends on T004)
+- [X] T005 [US1] Genereer en commit het initiële Linux-referentiebeeld via Playwright's officiële Docker-image, per quickstart.md § 2 (`tests/visual/player-setup.spec.ts-snapshots/player-setup-chromium-linux.png`) (depends on T004)
 - [X] T006 [US1] Voeg een `visual-tests`-job toe aan `.github/workflows/ci.yml`: checkout, `actions/setup-node@v4` (node 22), `npm ci`, `npx playwright install --with-deps chromium`, `npx playwright test` (depends on T005)
 - [X] T007 [US1] Valideer end-to-end per quickstart.md § 3: wijzig tijdelijk een stijl in `src/features/players/PlayerSetupScreen.tsx`, bevestig dat `npx playwright test` faalt met een diff, draai de wijziging terug en bevestig dat de test weer slaagt (depends on T006)
 
@@ -81,7 +81,7 @@ referentiebeeld bij, en bevestig dat CI weer slaagt.
 
 - [X] T008 [US2] Voeg een rapport-upload-stap toe aan de `visual-tests`-job in `.github/workflows/ci.yml`: `actions/upload-artifact` voor `playwright-report/`, met `if: failure()` (depends on T006)
 - [X] T009 [P] [US2] Voeg de scripts `test:visual` (`playwright test`) en `test:visual:update` (`playwright test --update-snapshots`) toe aan `package.json`
-- [ ] T010 [US2] Valideer end-to-end per quickstart.md § 4: maak een bewuste visuele wijziging, volg de bijwerkprocedure uit `contracts/visual-test-conventions.md` (`npm run test:visual:update` via het Docker-image), commit het nieuwe referentiebeeld, en bevestig dat `npm run test:visual` weer slaagt (depends on T008, T009)
+- [X] T010 [US2] Valideer end-to-end per quickstart.md § 4: maak een bewuste visuele wijziging, volg de bijwerkprocedure uit `contracts/visual-test-conventions.md` (`npm run test:visual:update` via het Docker-image), commit het nieuwe referentiebeeld, en bevestig dat `npm run test:visual` weer slaagt (depends on T008, T009)
 
 **Checkpoint**: User Story 1 én 2 werken samen zelfstandig
 
@@ -128,7 +128,7 @@ codewijzigingen; beide runs geven hetzelfde resultaat.
 
 ## Phase 7: Polish & Cross-Cutting Concerns
 
-- [ ] T014 Doorloop `quickstart.md` volledig (§ 1 t/m § 6) als eindcontrole
+- [X] T014 Doorloop `quickstart.md` volledig (§ 1 t/m § 6) als eindcontrole
 - [X] T015 [P] Voeg een korte "Visuele tests"-sectie toe aan `README.md` die verwijst naar `specs/006-playwright-visual-ci/quickstart.md` en `contracts/visual-test-conventions.md`
 
 ---

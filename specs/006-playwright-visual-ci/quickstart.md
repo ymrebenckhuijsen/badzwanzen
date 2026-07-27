@@ -39,6 +39,23 @@ docker run --rm -v "$PWD":/work -w /work mcr.microsoft.com/playwright:v<versie>-
 `tests/visual/player-setup.spec.ts-snapshots/player-setup-chromium-linux.png` verschijnt als
 nieuw, ongetrackt bestand. Commit dit bestand.
 
+**Alternatief zonder Docker**: als Docker niet beschikbaar is (bijv. in een sandboxed
+dev-omgeving), kun je het echte Linux-screenshot ook uit een CI-run halen — dit is hoe de
+initiële baseline van deze feature zelf tot stand kwam:
+
+1. Push de branch/open een PR zonder referentiebeeld; de `visual-tests`-job faalt en uploadt
+   `playwright-report` als artefact (zie § 5).
+2. `gh run download <run-id> -n playwright-report -D /tmp/report` om het artefact te downloaden.
+3. Het rapport bevat óf direct een `data/<hash>.png`-bestand, óf een self-contained
+   `index.html` met een `<template id="playwrightReportBase64">data:application/zip;base64,...`
+   — in dat laatste geval decodeer je die base64-string naar een `.zip`, pak je die uit, en vind
+   je de screenshots (en attachment-metadata in `report.json`) daarin.
+4. Kopieer de juiste `-actual.png` naar
+   `tests/visual/player-setup.spec.ts-snapshots/player-setup-chromium-linux.png` en commit.
+
+Dit is een eenmalige bootstrap-methode, geen vervanging van het Docker-commando als
+standaardproces — de CI-job commit zelf nooit iets terug (zie research.md § 3).
+
 ## 3. Rood aantonen: een bewuste visuele wijziging simuleren
 
 ```bash
