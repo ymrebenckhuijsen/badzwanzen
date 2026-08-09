@@ -10,8 +10,15 @@ import { useVirusEffects } from './features/virus/useVirusEffects'
 import { ActiveVirusList } from './features/virus/ActiveVirusList'
 import { VirusLiftCard } from './features/virus/VirusLiftCard'
 import type { ActiveVirusEffect } from './features/virus/virus.types'
+import { EndOfGameScreen } from './features/end-of-game/EndOfGameScreen'
 
-function GameScreen({ players }: { players: Player[] }) {
+interface GameScreenProps {
+  players: Player[]
+  onPlayAgain: () => void
+  onChangePlayers: () => void
+}
+
+function GameScreen({ players, onPlayAgain, onChangePlayers }: GameScreenProps) {
   const [pool] = useState<SessionCardPool>(() => buildSessionCardPool(seedCardSet))
   const { draw, hasEnded } = useDrawPile(pool, seedCardSet, players)
   const { effects, startEffects, advanceOnAssignmentGameDraw, forceLiftAll } = useVirusEffects()
@@ -52,6 +59,15 @@ function GameScreen({ players }: { players: Player[] }) {
 
   const currentCard = current ? seedCardSet.cards.find((c) => c.id === current.cardId) : null
 
+  // Pending virus lifts (from FR-018's forced end-of-session lift) must be acknowledged first —
+  // the end-of-game screen replaces the whole card-loop screen, so it only takes over once the
+  // lift queue has drained.
+  if (!currentLift && hasEnded) {
+    return (
+      <EndOfGameScreen players={players} onPlayAgain={onPlayAgain} onChangePlayers={onChangePlayers} />
+    )
+  }
+
   return (
     <div className="mx-auto flex min-h-svh max-w-md flex-col gap-6 bg-surface p-6 text-on-surface">
       <header className="pt-4 text-center">
@@ -74,15 +90,6 @@ function GameScreen({ players }: { players: Player[] }) {
             VERDER →
           </button>
         </>
-      ) : hasEnded ? (
-        <div className="mt-auto flex flex-col items-center gap-2 rounded-xl bg-surface-container-high p-6 text-center">
-          <span className="font-display text-headline-lg-mobile text-on-surface">
-            Het spel is afgelopen!
-          </span>
-          <p className="font-body text-body-md text-on-surface-variant">
-            Alle kaarten zijn getrokken.
-          </p>
-        </div>
       ) : (
         <>
           {current && currentCard && (
@@ -110,12 +117,20 @@ function GameScreen({ players }: { players: Player[] }) {
 
 function App() {
   const [players, setPlayers] = useState<Player[] | null>(null)
+  const [sessionKey, setSessionKey] = useState(0)
 
   if (!players) {
     return <PlayerSetupScreen onStartGame={setPlayers} />
   }
 
-  return <GameScreen players={players} />
+  return (
+    <GameScreen
+      key={sessionKey}
+      players={players}
+      onPlayAgain={() => setSessionKey((k) => k + 1)}
+      onChangePlayers={() => setPlayers(null)}
+    />
+  )
 }
 
 export default App

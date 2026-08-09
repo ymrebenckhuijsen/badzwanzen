@@ -222,3 +222,6 @@ frontmatter for exact values):
 - `004-assignments-and-viruses`: "Badzwanzen - Virus Kaart" / "Spel Kaart" / "Spelverloop"
   (mobile) — the core gameplay screen, one color variant per card type (blue/red/green). See
   [specs/004-assignments-and-viruses/DESIGN.md](specs/004-assignments-and-viruses/DESIGN.md).
+- `008-end-of-game`: "Badzwanzen - Einde Spel" (mobile) — end-of-game screen shown when the
+  draw pool is exhausted, with player list and "Speel opnieuw"/"Spelers wijzigen" actions. See
+  [specs/008-end-of-game/DESIGN.md](specs/008-end-of-game/DESIGN.md).
