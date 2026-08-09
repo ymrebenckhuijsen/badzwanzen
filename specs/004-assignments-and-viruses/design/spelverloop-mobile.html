@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="nl"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;600;700;800;900&amp;family=Be+Vietnam+Pro:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>.material-symbols-outlined {
+    font-variation-settings: "FILL" 0, "wght" 400, "GRAD" 0, "opsz" 24
+    }
+.grain-overlay {
+    background-image: url(https://lh3.googleusercontent.com/aida-public/AB6AXuCKSP-6vMGGHGlYOXjt7yxf_KOhzB-y1MEhlbRWkqWwYPtWfEg26E0_l0J4XZJFNpCibAYbwntwSgLp7s3PaktQCUHfH9W5DP4FLQWekY6L7tH_1Lsf52_u6bCik1wgZm3vrdlIn1iUaH91UN33dttuqCkFPmNuPg5qylBVmtUSNdjRsjE7-7t01gZ7XQMdxOhILzUW1CEMb0RLNTZ6O9FEhNiI4KfPLJu55TkIpmkeueDNC1yoNwlAjdubOk0Cupq2hkETK_lCZOw);
+    filter: contrast(150%) brightness(100%);
+    opacity: 0.05;
+    pointer-events: none
+    }
+.tactile-press:active {
+    transform: translatey(4px);
+    box-shadow: none !important
+    }
+body {
+    background-color: #0b1326;
+    color: #dae2fd;
+    -webkit-tap-highlight-color: transparent
+    }</style>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "error-container": "#93000a",
+                        "on-tertiary-container": "#ffecea",
+                        "on-primary-container": "#eeefff",
+                        "surface-container-high": "#222a3d",
+                        "on-primary-fixed": "#00174b",
+                        "tertiary-container": "#cf2c30",
+                        "outline": "#8d90a0",
+                        "inverse-surface": "#dae2fd",
+                        "surface-dim": "#0b1326",
+                        "secondary-fixed-dim": "#4ae176",
+                        "on-secondary-fixed": "#002109",
+                        "surface-tint": "#b4c5ff",
+                        "tertiary-fixed-dim": "#ffb3ad",
+                        "on-tertiary": "#68000a",
+                        "secondary-container": "#00b954",
+                        "inverse-on-surface": "#283044",
+                        "on-tertiary-fixed-variant": "#930013",
+                        "primary-container": "#2563eb",
+                        "surface-container-highest": "#2d3449",
+                        "primary-fixed-dim": "#b4c5ff",
+                        "on-primary": "#002a78",
+                        "surface-bright": "#31394d",
+                        "on-surface": "#dae2fd",
+                        "primary": "#b4c5ff",
+                        "inverse-primary": "#0053db",
+                        "on-tertiary-fixed": "#410004",
+                        "background": "#0b1326",
+                        "outline-variant": "#434655",
+                        "tertiary-fixed": "#ffdad7",
+                        "on-surface-variant": "#c3c6d7",
+                        "surface-container-low": "#131b2e",
+                        "surface-variant": "#2d3449",
+                        "on-secondary-container": "#004119",
+                        "on-secondary": "#003915",
+                        "on-primary-fixed-variant": "#003ea8",
+                        "tertiary": "#ffb3ad",
+                        "surface-container": "#171f33",
+                        "surface-container-lowest": "#060e20",
+                        "on-error": "#690005",
+                        "surface": "#0b1326",
+                        "error": "#ffb4ab",
+                        "primary-fixed": "#dbe1ff",
+                        "on-error-container": "#ffdad6",
+                        "secondary": "#4ae176",
+                        "on-secondary-fixed-variant": "#005321",
+                        "on-background": "#dae2fd",
+                        "secondary-fixed": "#6bff8f"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "1rem",
+                        "lg": "2rem",
+                        "xl": "3rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "gutter": "16px",
+                        "base": "8px",
+                        "lg": "40px",
+                        "md": "24px",
+                        "container-margin": "20px",
+                        "xs": "4px",
+                        "xl": "64px",
+                        "sm": "12px"
+                    },
+                    "fontFamily": {
+                        "display-xl": ["Rubik"],
+                        "headline-lg-mobile": ["Rubik"],
+                        "body-lg": ["Be Vietnam Pro"],
+                        "label-bold": ["Rubik"],
+                        "headline-lg": ["Rubik"],
+                        "body-md": ["Be Vietnam Pro"]
+                    },
+                    "fontSize": {
+                        "display-xl": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "800"}],
+                        "headline-lg-mobile": ["28px", {"lineHeight": "36px", "fontWeight": "700"}],
+                        "body-lg": ["20px", {"lineHeight": "30px", "fontWeight": "500"}],
+                        "label-bold": ["14px", {"lineHeight": "20px", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                        "headline-lg": ["32px", {"lineHeight": "40px", "fontWeight": "700"}],
+                        "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="min-h-screen flex flex-col font-body-md overflow-hidden">
+<!-- TopAppBar Shell -->
+<header class="flex justify-between items-center px-container-margin py-base w-full fixed top-0 z-50 bg-surface/80 backdrop-blur-md">
+<h1 class="font-headline-lg-mobile text-headline-lg-mobile font-black text-secondary tracking-tighter">PARTY PULSE</h1>
+<div class="flex gap-4 items-center">
+<button class="material-symbols-outlined text-primary hover:scale-105 transition-transform active:scale-95 transition-all" data-icon="settings">settings</button>
+</div>
+</header>
+<!-- Main Gameplay Canvas -->
+<main class="flex-1 mt-16 mb-24 px-container-margin flex flex-col gap-md max-w-[500px] mx-auto w-full">
+<!-- Game Card Component -->
+<div class="relative flex-1 min-h-[450px] bg-surface-container-high rounded-lg overflow-hidden flex flex-col shadow-2xl group">
+<!-- Grain Texture -->
+<div class="absolute inset-0 grain-overlay"></div>
+<!-- Mode Color Backdrop (Soft Inner Glow Simulation) -->
+<div class="absolute inset-0 bg-primary-container/20 mix-blend-overlay"></div>
+<!-- Card Content Content -->
+<div class="relative p-md flex flex-col h-full z-10">
+<!-- Mode Chip -->
+<div class="flex justify-center mb-md">
+<span class="bg-primary-container text-on-primary-container font-label-bold text-label-bold px-lg py-xs rounded-full shadow-lg border-b-4 border-black/20">
+                        OPDRACHT
+                    </span>
+</div>
+<!-- Main Text -->
+<div class="flex-1 flex items-center justify-center text-center">
+<h2 class="font-display-xl text-display-xl text-on-surface">
+                        Alice moet 10 keer opdrukken
+                    </h2>
+</div>
+<!-- Result Buttons -->
+<div class="grid grid-cols-2 gap-md mt-auto">
+<button class="tactile-press bg-secondary-container text-on-secondary-container font-label-bold text-label-bold py-md rounded-full shadow-[0px_8px_0px_rgba(0,0,0,0.2)] border-b-4 border-on-secondary-fixed-variant/30 flex items-center justify-center gap-xs">
+<span class="material-symbols-outlined" data-icon="check_circle">check_circle</span>
+                        GELUKT
+                    </button>
+<button class="tactile-press bg-tertiary-container text-on-tertiary-container font-label-bold text-label-bold py-md rounded-full shadow-[0px_8px_0px_rgba(0,0,0,0.2)] border-b-4 border-on-tertiary-fixed-variant/30 flex items-center justify-center gap-xs">
+<span class="material-symbols-outlined" data-icon="cancel">cancel</span>
+                        MISLUKT
+                    </button>
+</div>
+</div>
+</div>
+<!-- Viruses Section -->
+<section class="flex flex-col gap-sm">
+<h3 class="font-label-bold text-label-bold text-outline uppercase tracking-widest px-xs">Actieve virussen</h3>
+<div class="bg-surface-container-low rounded-lg p-sm flex flex-col gap-xs">
+<!-- Row Bob -->
+<div class="flex items-center justify-between px-base py-xs hover:bg-surface-bright/10 rounded transition-colors">
+<div class="flex items-center gap-sm">
+<div class="w-8 h-8 rounded-full bg-secondary-fixed text-on-secondary-fixed flex items-center justify-center font-bold">B</div>
+<span class="font-body-lg text-body-lg text-on-surface">Bob</span>
+</div>
+<div class="bg-error-container text-on-error-container px-sm py-xs rounded-full font-label-bold text-label-bold">
+                        x2
+                    </div>
+</div>
+<!-- Row Chris -->
+<div class="flex items-center justify-between px-base py-xs hover:bg-surface-bright/10 rounded transition-colors">
+<div class="flex items-center gap-sm">
+<div class="w-8 h-8 rounded-full bg-primary-fixed text-on-primary-fixed flex items-center justify-center font-bold">C</div>
+<span class="font-body-lg text-body-lg text-on-surface">Chris</span>
+</div>
+<span class="material-symbols-outlined text-outline" data-icon="coronavirus">coronavirus</span>
+</div>
+</div>
+</section>
+<!-- Next Card Button -->
+<div class="pb-base">
+<button class="tactile-press w-full bg-primary text-on-primary font-display-xl text-headline-lg-mobile py-md rounded-full shadow-[0px_10px_30px_rgba(0,0,0,0.3)] border-b-4 border-on-primary-fixed-variant transition-all hover:brightness-110 flex items-center justify-center gap-md">
+                VOLGENDE KAART
+                <span class="material-symbols-outlined" data-icon="arrow_forward" data-weight="fill" style="font-variation-settings: 'FILL' 1;">arrow_forward</span>
+</button>
+</div>
+</main>
+<!-- BottomNavBar Shell -->
+<nav class="fixed bottom-0 w-full z-50 flex justify-around items-center px-4 pb-8 pt-4 bg-surface-container-low/90 backdrop-blur-xl">
+<a class="flex flex-col items-center justify-center bg-secondary-container text-on-secondary-container rounded-xl px-4 py-2 hover:bg-surface-bright/20 active:scale-90 transition-all duration-150" href="#">
+<span class="material-symbols-outlined" data-icon="sports_esports">sports_esports</span>
+<span class="font-label-bold text-label-bold">Play</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant px-4 py-2 hover:bg-surface-bright/20 active:scale-90 transition-all duration-150" href="#">
+<span class="material-symbols-outlined" data-icon="group">group</span>
+<span class="font-label-bold text-label-bold">Players</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant px-4 py-2 hover:bg-surface-bright/20 active:scale-90 transition-all duration-150" href="#">
+<span class="material-symbols-outlined" data-icon="menu_book">menu_book</span>
+<span class="font-label-bold text-label-bold">Rules</span>
+</a>
+</nav>
+<script>
+        // Micro-interaction for feedback
+        document.querySelectorAll('.tactile-press').forEach(button => {
+            button.addEventListener('click', () => {
+                // Subtle haptic-style sound or vibration would go here
+                if (window.navigator.vibrate) {
+                    window.navigator.vibrate(50);
+                }
+            });
+        });
+
+        // Simple Next Card Animation Logic
+        const nextBtn = document.querySelector('button:contains("VOLGENDE KAART")');
+        if (nextBtn) {
+            nextBtn.addEventListener('click', () => {
+                const card = document.querySelector('.bg-surface-container-high');
+                card.style.transform = 'translateX(120%) rotate(10deg)';
+                card.style.opacity = '0';
+                card.style.transition = 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)';
+                
+                setTimeout(() => {
+                    card.style.transform = 'translateX(0) scale(0.9)';
+                    card.style.opacity = '1';
+                    setTimeout(() => {
+                        card.style.transform = 'scale(1)';
+                    }, 50);
+                }, 500);
+            });
+        }
+    </script>
+</body></html>

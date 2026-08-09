@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="nl"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;600;700;800;900&amp;family=Be+Vietnam+Pro:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "on-primary": "#002a78",
+                    "tertiary": "#ffb3ad",
+                    "on-error": "#690005",
+                    "surface-tint": "#b4c5ff",
+                    "on-tertiary-container": "#ffecea",
+                    "inverse-on-surface": "#283044",
+                    "error": "#ffb4ab",
+                    "surface-dim": "#0b1326",
+                    "on-tertiary-fixed": "#410004",
+                    "on-error-container": "#ffdad6",
+                    "surface-variant": "#2d3449",
+                    "surface-container-low": "#131b2e",
+                    "surface-container-high": "#222a3d",
+                    "on-secondary": "#003915",
+                    "error-container": "#93000a",
+                    "on-tertiary": "#68000a",
+                    "on-secondary-fixed": "#002109",
+                    "on-primary-container": "#eeefff",
+                    "surface-container-highest": "#2d3449",
+                    "inverse-primary": "#0053db",
+                    "on-secondary-fixed-variant": "#005321",
+                    "on-background": "#dae2fd",
+                    "on-surface": "#dae2fd",
+                    "on-primary-fixed": "#00174b",
+                    "inverse-surface": "#dae2fd",
+                    "background": "#0b1326",
+                    "tertiary-fixed": "#ffdad7",
+                    "primary-fixed": "#dbe1ff",
+                    "tertiary-fixed-dim": "#ffb3ad",
+                    "surface-container": "#171f33",
+                    "secondary-container": "#00b954",
+                    "surface-bright": "#31394d",
+                    "secondary-fixed": "#6bff8f",
+                    "outline-variant": "#434655",
+                    "outline": "#8d90a0",
+                    "on-secondary-container": "#004119",
+                    "on-tertiary-fixed-variant": "#930013",
+                    "on-primary-fixed-variant": "#003ea8",
+                    "primary-fixed-dim": "#b4c5ff",
+                    "surface-container-lowest": "#060e20",
+                    "surface": "#0b1326",
+                    "primary": "#b4c5ff",
+                    "tertiary-container": "#cf2c30",
+                    "secondary-fixed-dim": "#4ae176",
+                    "primary-container": "#2563eb",
+                    "secondary": "#4ae176",
+                    "on-surface-variant": "#c3c6d7"
+            },
+            "borderRadius": {
+                    "DEFAULT": "1rem",
+                    "lg": "2rem",
+                    "xl": "3rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "xl": "64px",
+                    "sm": "12px",
+                    "container-margin": "20px",
+                    "base": "8px",
+                    "md": "24px",
+                    "xs": "4px",
+                    "lg": "40px",
+                    "gutter": "16px"
+            },
+            "fontFamily": {
+                    "label-bold": ["Rubik"],
+                    "body-md": ["Be Vietnam Pro"],
+                    "headline-lg": ["Rubik"],
+                    "body-lg": ["Be Vietnam Pro"],
+                    "headline-lg-mobile": ["Rubik"],
+                    "display-xl": ["Rubik"]
+            },
+            "fontSize": {
+                    "label-bold": ["14px", {"lineHeight": "20px", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                    "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                    "headline-lg": ["32px", {"lineHeight": "40px", "fontWeight": "700"}],
+                    "body-lg": ["20px", {"lineHeight": "30px", "fontWeight": "500"}],
+                    "headline-lg-mobile": ["28px", {"lineHeight": "36px", "fontWeight": "700"}],
+                    "display-xl": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "800"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .tactile-button {
+            box-shadow: 0px 4px 0px 0px rgba(0, 0, 0, 0.4);
+        }
+        .tactile-button:active {
+            transform: translateY(2px);
+            box-shadow: 0px 2px 0px 0px rgba(0, 0, 0, 0.4);
+        }
+        .card-grain {
+            position: relative;
+        }
+        .card-grain::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background-image: url("https://www.transparenttextures.com/patterns/stardust.png");
+            opacity: 0.1;
+            pointer-events: none;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-background font-body-md min-h-screen flex flex-col items-center">
+<!-- TopAppBar -->
+<header class="bg-surface/80 backdrop-blur-md flex justify-between items-center px-container-margin py-base w-full fixed top-0 z-50">
+<div class="font-headline-lg-mobile text-headline-lg-mobile font-black text-secondary tracking-tighter">BADZWANZEN</div>
+<div class="flex gap-md">
+<button class="text-primary dark:text-primary-fixed hover:scale-105 transition-transform active:scale-95 transition-all">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+</button>
+</div>
+</header>
+<!-- Main Canvas -->
+<main class="w-full max-w-[500px] flex-1 flex flex-col items-center pt-24 pb-32 px-container-margin space-y-md">
+<!-- Game Card (The centerpiece) -->
+<div class="w-full aspect-[3/4] bg-secondary rounded-lg shadow-[0px_10px_30px_rgba(0,0,0,0.3)] card-grain relative flex flex-col p-md overflow-hidden">
+<!-- Mode Chip -->
+<div class="self-center">
+<span class="bg-on-secondary text-secondary font-label-bold text-label-bold px-md py-xs rounded-full uppercase tracking-widest">
+                    SPEL
+                </span>
+</div>
+<!-- Instruction Text -->
+<div class="flex-1 flex items-center justify-center text-center">
+<h1 class="text-on-secondary font-display-xl text-display-xl leading-tight">
+                    Iedereen moet een dansje doen op het volgende nummer
+                </h1>
+</div>
+<!-- Decorative Element (Molded look) -->
+<div class="absolute inset-0 border-[12px] border-black/10 pointer-events-none rounded-lg"></div>
+</div>
+<!-- Progress Bar (Subtle hint of game pace) -->
+<div class="w-full h-3 bg-surface-container-high rounded-full overflow-hidden">
+<div class="h-full bg-secondary w-2/3 rounded-full"></div>
+</div>
+<!-- Active Viruses Section -->
+<section class="w-full space-y-sm">
+<h3 class="font-label-bold text-label-bold text-outline uppercase tracking-wider pl-xs">ACTIEVE VIRUSSEN</h3>
+<div class="flex flex-wrap gap-sm">
+<!-- Virus Chip: Bob -->
+<div class="flex items-center gap-xs bg-surface-container-highest px-md py-sm rounded-lg border-2 border-primary/20">
+<span class="material-symbols-outlined text-primary text-[20px]" data-icon="coronavirus">coronavirus</span>
+<span class="font-label-bold text-label-bold text-on-surface">Bob</span>
+</div>
+<!-- Virus Chip: Chris -->
+<div class="flex items-center gap-xs bg-surface-container-highest px-md py-sm rounded-lg border-2 border-primary/20">
+<span class="material-symbols-outlined text-primary text-[20px]" data-icon="coronavirus">coronavirus</span>
+<span class="font-label-bold text-label-bold text-on-surface">Chris</span>
+</div>
+</div>
+</section>
+<!-- Primary Action Button -->
+<div class="w-full pt-4">
+<button class="tactile-button w-full bg-primary-container text-on-primary-container font-headline-lg-mobile text-headline-lg-mobile py-md rounded-lg flex items-center justify-center gap-sm hover:scale-[1.02] transition-transform active:scale-95">
+                VOLGENDE KAART
+                <span class="material-symbols-outlined font-bold" data-icon="arrow_forward">arrow_forward</span>
+</button>
+</div>
+</main>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 w-full z-50 flex justify-around items-center px-4 pb-8 pt-4 bg-surface-container-low backdrop-blur-xl shadow-[0px_-10px_30px_rgba(0,0,0,0.3)] rounded-t-lg">
+<!-- Play Tab (Active) -->
+<a class="flex flex-col items-center justify-center bg-secondary-container text-on-secondary-container rounded-xl px-4 py-2 hover:bg-surface-bright/20 active:scale-90 transition-all duration-150" href="#">
+<span class="material-symbols-outlined" data-icon="sports_esports" style="font-variation-settings: 'FILL' 1;">sports_esports</span>
+<span class="font-label-bold text-label-bold">Play</span>
+</a>
+<!-- Players Tab -->
+<a class="flex flex-col items-center justify-center text-on-surface-variant px-4 py-2 hover:bg-surface-bright/20 active:scale-90 transition-all duration-150" href="#">
+<span class="material-symbols-outlined" data-icon="group">group</span>
+<span class="font-label-bold text-label-bold">Players</span>
+</a>
+<!-- Rules Tab -->
+<a class="flex flex-col items-center justify-center text-on-surface-variant px-4 py-2 hover:bg-surface-bright/20 active:scale-90 transition-all duration-150" href="#">
+<span class="material-symbols-outlined" data-icon="menu_book">menu_book</span>
+<span class="font-label-bold text-label-bold">Rules</span>
+</a>
+</nav>
+<script>
+        // Micro-interaction for the card bounce effect on load
+        document.addEventListener('DOMContentLoaded', () => {
+            const card = document.querySelector('.card-grain');
+            card.style.opacity = '0';
+            card.style.transform = 'translateY(20px) rotate(-1deg)';
+            
+            setTimeout(() => {
+                card.style.transition = 'all 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275)';
+                card.style.opacity = '1';
+                card.style.transform = 'translateY(0) rotate(0)';
+            }, 100);
+        });
+
+        // Haptic-like feedback simulation for button
+        const btn = document.querySelector('.tactile-button');
+        btn.addEventListener('touchstart', () => {
+            if ('vibrate' in navigator) {
+                navigator.vibrate(10);
+            }
+        });
+    </script>
+</body></html>

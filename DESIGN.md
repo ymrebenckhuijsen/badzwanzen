@@ -219,3 +219,6 @@ frontmatter for exact values):
   workflow tooling that makes this file update automatically for future UI-affecting features).
 - `001-add-players`: "Badzwanzen - Spelers Toevoegen" (mobile) — the app's first screen. See
   [specs/001-add-players/DESIGN.md](specs/001-add-players/DESIGN.md).
+- `004-assignments-and-viruses`: "Badzwanzen - Virus Kaart" / "Spel Kaart" / "Spelverloop"
+  (mobile) — the core gameplay screen, one color variant per card type (blue/red/green). See
+  [specs/004-assignments-and-viruses/DESIGN.md](specs/004-assignments-and-viruses/DESIGN.md).
