@@ -1,3 +1,4 @@
+import { InstallButton } from '../pwa-install/InstallButton'
 import type { Player } from './types'
 import { AddPlayerControl } from './AddPlayerControl'
 import { PlayerList } from './PlayerList'
@@ -22,6 +23,8 @@ export function PlayerSetupScreen({ onStartGame }: PlayerSetupScreenProps = {}) 
           Wie durft er mee te doen?
         </p>
       </header>
+
+      <InstallButton />
 
       <div className="flex flex-col gap-2">
         <div className="flex items-center justify-between font-display text-label-bold text-on-surface-variant">
