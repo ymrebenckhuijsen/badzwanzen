@@ -38,7 +38,7 @@ export function DrawnCardView({ card, targetPlayerIds, players }: DrawnCardViewP
           </span>
         )}
       </div>
-      <p className="font-display text-display-xl mt-4">{text}</p>
+      <p className="font-display text-display-xl mt-4 break-words">{text}</p>
     </div>
   )
 }
