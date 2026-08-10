@@ -437,3 +437,27 @@ describe('App virus concurrency cap (US1, feature 011)', () => {
     expect(screen.getAllByText('×4').length).toBeGreaterThan(0)
   })
 })
+
+describe('App landscape layout (feature 013)', () => {
+  beforeEach(() => {
+    window.localStorage.clear()
+    mockedBuildSessionCardPool.mockReset()
+    mockedBuildSessionCardPool.mockReturnValue(twoCardPool())
+  })
+
+  it("GameScreen's root container carries the landscape/short responsive classes", async () => {
+    const user = userEvent.setup()
+    const { container } = render(<App />)
+
+    await startSession(user, ['Yara', 'Tom'])
+
+    expect(container.firstChild).toHaveClass(
+      'min-h-svh',
+      'max-w-md',
+      'landscape:max-w-2xl',
+      'overflow-y-auto',
+      'short:gap-3',
+      'short:p-4',
+    )
+  })
+})

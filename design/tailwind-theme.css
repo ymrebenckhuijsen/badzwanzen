@@ -131,3 +131,8 @@
   --spacing-container-margin: 20px;
   --spacing-gutter: 16px;
 }
+
+/* Custom variant for low-height landscape phones (feature 013-landscape-mode, spec FR-008,
+   ~320-360px viewport height range). Not a design-system token — a Tailwind v4 media-query
+   variant so screens can tighten spacing only when vertical space is genuinely scarce. */
+@custom-variant short (@media (max-height: 500px));
