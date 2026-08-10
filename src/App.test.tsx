@@ -275,6 +275,35 @@ describe('App live player management (007 US2)', () => {
     expect(screen.queryByText(/tom moet een dansje doen/i)).not.toBeInTheDocument()
     expect(screen.getByText(/moet een dansje doen/i)).toBeInTheDocument()
   })
+
+  it('keeps the already-drawn card showing the removed player\'s name, not a blank placeholder (regression)', async () => {
+    mockedBuildSessionCardPool.mockReturnValue({
+      poolCardIds: ['specific-001'],
+      remainingCardIds: ['specific-001'],
+      hasEnded: false,
+    })
+    const user = userEvent.setup()
+    render(<App />)
+
+    await startSession(user, ['Yara', 'Tom', 'Kim'])
+    await draw(user)
+
+    // Whichever of the three players was randomly targeted, their name is now shown.
+    const targetedName = ['Yara', 'Tom', 'Kim'].find((name) =>
+      screen.queryByText(new RegExp(`${name} moet een dansje doen`, 'i')),
+    )
+    expect(targetedName).toBeDefined()
+
+    await user.click(screen.getByRole('button', { name: /spelers/i }))
+    await user.click(screen.getByRole('button', { name: new RegExp(`verwijder ${targetedName}`, 'i') }))
+    await user.click(screen.getByRole('button', { name: /^ja$/i }))
+    await user.click(screen.getByRole('button', { name: /sluiten/i }))
+
+    // The already-drawn card still shows the removed player's name — it isn't retroactively
+    // erased by a later removal, since that card's target was resolved before the removal.
+    expect(screen.getByText(new RegExp(`${targetedName} moet een dansje doen`, 'i'))).toBeInTheDocument()
+    expect(screen.queryByText(/^\{player\}/)).not.toBeInTheDocument()
+  })
 })
 
 describe('App card-set selection lock across replay (US1, FR-012)', () => {
