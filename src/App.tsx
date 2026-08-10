@@ -21,8 +21,11 @@ interface GameScreenProps {
 
 function GameScreen({ players, cardSet, onPlayAgain, onChangePlayers }: GameScreenProps) {
   const [pool] = useState<SessionCardPool>(() => buildSessionCardPool(cardSet))
-  const { draw, hasEnded } = useDrawPile(pool, cardSet, players)
   const { effects, startEffects, advanceOnAssignmentGameDraw, forceLiftAll } = useVirusEffects()
+  const activeVirusCount = new Set(
+    effects.filter((e) => e.status === 'active').map((e) => e.cardId),
+  ).size
+  const { draw, hasEnded } = useDrawPile(pool, cardSet, players, activeVirusCount)
   const [current, setCurrent] = useState<DrawnCard | null>(null)
   const [liftQueue, setLiftQueue] = useState<ActiveVirusEffect[]>([])
 

@@ -44,7 +44,7 @@ function makeValidCardSet(): CardSet {
         type: 'virus',
         targeting: { kind: 'specific', count: 1 },
         instructionText: '{player} mag niet meer met links drinken',
-        liftText: '{player} is genezen',
+        liftText: `{player} is genezen van virus ${i}`,
       }),
     )
   }
@@ -128,6 +128,21 @@ describe('validateCardSet', () => {
 
     const errors = validateCardSet(cardSet)
     expect(errors.some((e) => e.cardId === undefined)).toBe(true)
+  })
+
+  it('errors when two virus cards share the same lift text', () => {
+    const cardSet = makeValidCardSet()
+    cardSet.cards[4] = makeCard({
+      id: 'virus-1',
+      type: 'virus',
+      targeting: { kind: 'specific', count: 1 },
+      instructionText: '{player} mag niet meer met links drinken',
+      liftText: '{player} is genezen van virus 0', // same as virus-0's liftText
+    })
+
+    const errors = validateCardSet(cardSet)
+    expect(errors.some((e) => e.cardId === 'virus-0')).toBe(true)
+    expect(errors.some((e) => e.cardId === 'virus-1')).toBe(true)
   })
 
   it('errors when the card set has fewer than 4 virus cards', () => {

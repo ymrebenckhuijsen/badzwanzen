@@ -40,6 +40,23 @@ export function validateCardSet(cardSet: CardSet): ValidationError[] {
     }
   }
 
+  const virusCardsByLiftText = new Map<string, Card[]>()
+  for (const card of cardSet.cards) {
+    if (card.type !== 'virus' || !card.liftText) continue
+    const group = virusCardsByLiftText.get(card.liftText) ?? []
+    group.push(card)
+    virusCardsByLiftText.set(card.liftText, group)
+  }
+  for (const group of virusCardsByLiftText.values()) {
+    if (group.length < 2) continue
+    for (const card of group) {
+      errors.push({
+        cardId: card.id,
+        message: `Virus card "${card.id}" shares its liftText with ${group.length - 1} other virus card(s); every virus's liftText must be unique`,
+      })
+    }
+  }
+
   if (cardSet.cards.length < MIN_CARDS) {
     errors.push({
       message: `Card set "${cardSet.id}" has ${cardSet.cards.length} cards, expected at least ${MIN_CARDS}`,
