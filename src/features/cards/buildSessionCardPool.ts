@@ -1,7 +1,7 @@
 import type { CardSet, SessionCardPool } from './card.types'
 
-const MIN_POOL_SIZE = 60
-const MAX_POOL_SIZE = 80
+const MIN_POOL_SIZE = 50
+const MAX_POOL_SIZE = 55
 const MIN_VIRUS_IN_POOL = 4
 
 function shuffle<T>(items: T[]): T[] {

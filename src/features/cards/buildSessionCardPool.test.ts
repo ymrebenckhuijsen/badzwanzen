@@ -3,11 +3,11 @@ import { buildSessionCardPool } from './buildSessionCardPool'
 import { seedCardSet } from './data/seed-card-set'
 
 describe('buildSessionCardPool', () => {
-  it('produces a pool sized between 60 and 80 cards, inclusive', () => {
+  it('produces a pool sized between 50 and 55 cards, inclusive', () => {
     for (let i = 0; i < 20; i++) {
       const pool = buildSessionCardPool(seedCardSet)
-      expect(pool.poolCardIds.length).toBeGreaterThanOrEqual(60)
-      expect(pool.poolCardIds.length).toBeLessThanOrEqual(80)
+      expect(pool.poolCardIds.length).toBeGreaterThanOrEqual(50)
+      expect(pool.poolCardIds.length).toBeLessThanOrEqual(55)
     }
   })
 
