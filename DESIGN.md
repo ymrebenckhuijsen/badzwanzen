@@ -225,3 +225,7 @@ frontmatter for exact values):
 - `008-end-of-game`: "Badzwanzen - Einde Spel" (mobile) — end-of-game screen shown when the
   draw pool is exhausted, with player list and "Speel opnieuw"/"Spelers wijzigen" actions. See
   [specs/008-end-of-game/DESIGN.md](specs/008-end-of-game/DESIGN.md).
+- `010-card-sets`: "Kaartenset kiezen" (mobile) — new session-setup step for choosing a named
+  card set, slots in after the players screen. Hand-authored (not Stitch — see its addendum)
+  reusing the exact tokens/components of the Spelers Toevoegen screen. See
+  [specs/010-card-sets/DESIGN.md](specs/010-card-sets/DESIGN.md).

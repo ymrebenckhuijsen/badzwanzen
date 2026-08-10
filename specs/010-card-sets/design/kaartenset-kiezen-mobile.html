@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="nl"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Badzwanzen - Kaartenset Kiezen</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500&amp;family=Rubik:wght@700;800;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind Config Verbatim -->
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "tertiary": "#ffb3ad",
+                    "primary": "#b4c5ff",
+                    "on-tertiary-fixed-variant": "#930013",
+                    "on-surface-variant": "#c3c6d7",
+                    "on-primary-fixed": "#00174b",
+                    "on-background": "#dae2fd",
+                    "secondary": "#4ae176",
+                    "on-secondary-fixed": "#002109",
+                    "primary-fixed-dim": "#b4c5ff",
+                    "on-tertiary-container": "#ffecea",
+                    "primary-fixed": "#dbe1ff",
+                    "inverse-surface": "#dae2fd",
+                    "on-tertiary-fixed": "#410004",
+                    "surface-container": "#171f33",
+                    "on-tertiary": "#68000a",
+                    "on-secondary-fixed-variant": "#005321",
+                    "error": "#ffb4ab",
+                    "on-secondary": "#003915",
+                    "error-container": "#93000a",
+                    "surface-variant": "#2d3449",
+                    "surface-container-highest": "#2d3449",
+                    "secondary-fixed": "#6bff8f",
+                    "secondary-container": "#00b954",
+                    "surface-container-lowest": "#060e20",
+                    "on-primary-container": "#eeefff",
+                    "tertiary-container": "#cf2c30",
+                    "surface": "#0b1326",
+                    "outline": "#8d90a0",
+                    "on-error-container": "#ffdad6",
+                    "tertiary-fixed-dim": "#ffb3ad",
+                    "surface-bright": "#31394d",
+                    "inverse-primary": "#0053db",
+                    "on-error": "#690005",
+                    "on-primary-fixed-variant": "#003ea8",
+                    "tertiary-fixed": "#ffdad7",
+                    "surface-dim": "#0b1326",
+                    "outline-variant": "#434655",
+                    "on-primary": "#002a78",
+                    "surface-container-low": "#131b2e",
+                    "primary-container": "#2563eb",
+                    "inverse-on-surface": "#283044",
+                    "surface-tint": "#b4c5ff",
+                    "surface-container-high": "#222a3d",
+                    "secondary-fixed-dim": "#4ae176",
+                    "on-surface": "#dae2fd",
+                    "on-secondary-container": "#004119",
+                    "background": "#0b1326"
+            },
+            "borderRadius": {
+                    "DEFAULT": "1rem",
+                    "lg": "2rem",
+                    "xl": "3rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "container-margin": "20px",
+                    "md": "24px",
+                    "base": "8px",
+                    "xl": "64px",
+                    "lg": "40px",
+                    "xs": "4px",
+                    "sm": "12px",
+                    "gutter": "16px"
+            },
+            "fontFamily": {
+                    "body-md": ["Be Vietnam Pro"],
+                    "headline-lg-mobile": ["Rubik"],
+                    "body-lg": ["Be Vietnam Pro"],
+                    "label-bold": ["Rubik"],
+                    "headline-lg": ["Rubik"],
+                    "display-xl": ["Rubik"]
+            },
+            "fontSize": {
+                    "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                    "headline-lg-mobile": ["28px", {"lineHeight": "36px", "fontWeight": "700"}],
+                    "body-lg": ["20px", {"lineHeight": "30px", "fontWeight": "500"}],
+                    "label-bold": ["14px", {"lineHeight": "20px", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                    "headline-lg": ["32px", {"lineHeight": "40px", "fontWeight": "700"}],
+                    "display-xl": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "800"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        body {
+            background-color: #0b1326;
+            color: #dae2fd;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .tactile-button {
+            box-shadow: 0 6px 0 0 #005321;
+            transition: all 0.1s ease;
+        }
+
+        .tactile-button:active {
+            transform: translateY(4px);
+            box-shadow: 0 2px 0 0 #005321;
+        }
+
+        .grainy-bg {
+            background-image: url("https://www.transparenttextures.com/patterns/p6.png");
+        }
+
+        .custom-scroll::-webkit-scrollbar {
+            width: 4px;
+        }
+        .custom-scroll::-webkit-scrollbar-track {
+            background: rgba(0,0,0,0);
+        }
+        .custom-scroll::-webkit-scrollbar-thumb {
+            background: #434655;
+            border-radius: 10px;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="font-body-md text-body-md overflow-hidden flex flex-col h-screen">
+<!-- TopAppBar -->
+<header class="bg-surface/80 backdrop-blur-md flex justify-between items-center px-container-margin py-base w-full fixed top-0 z-50 flat no shadows">
+<h1 class="font-headline-lg-mobile text-headline-lg-mobile font-black text-secondary tracking-tighter">PARTY PULSE</h1>
+<div class="flex items-center gap-sm">
+<button class="hover:scale-105 transition-transform active:scale-95 transition-all text-primary">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+</button>
+</div>
+</header>
+<!-- Main Canvas -->
+<main class="flex-1 mt-[60px] mb-[100px] overflow-y-auto px-container-margin grainy-bg flex justify-center">
+<div class="w-full max-w-[500px] py-lg flex flex-col gap-lg">
+<!-- Header Section -->
+<section class="flex flex-col gap-xs">
+<h2 class="font-display-xl text-display-xl text-primary drop-shadow-lg">Kaartenset</h2>
+<p class="font-body-lg text-body-lg text-on-surface-variant">Kies welke set kaarten deze sessie gebruikt.</p>
+</section>
+<!-- Set List -->
+<section class="flex flex-col gap-sm custom-scroll">
+<!-- Set Card 1: Seed testset (selected/default) -->
+<button class="w-full text-left bg-surface-container-high border-2 border-primary rounded-xl p-md flex justify-between items-center shadow-[0px_4px_12px_rgba(0,0,0,0.2)]">
+<div class="flex items-center gap-md">
+<div class="w-12 h-12 rounded-full bg-primary-container flex items-center justify-center text-on-primary-container">
+<span class="material-symbols-outlined" data-icon="science">science</span>
+</div>
+<div class="flex flex-col">
+<span class="font-body-lg text-body-lg text-on-surface font-semibold">Seed testset</span>
+<span class="font-label-bold text-label-bold text-on-surface-variant tracking-wide">Voorbeeldkaarten &middot; 92 kaarten</span>
+</div>
+</div>
+<span class="material-symbols-outlined text-primary text-[28px]" data-icon="check_circle" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+</button>
+<!-- Set Card 2: Vrienden editie -->
+<button class="w-full text-left bg-surface-container-low border border-outline-variant rounded-xl p-md flex justify-between items-center shadow-[0px_4px_12px_rgba(0,0,0,0.15)]">
+<div class="flex items-center gap-md">
+<div class="w-12 h-12 rounded-full bg-secondary-container flex items-center justify-center text-on-secondary-container">
+<span class="material-symbols-outlined" data-icon="groups">groups</span>
+</div>
+<div class="flex flex-col">
+<span class="font-body-lg text-body-lg text-on-surface font-semibold">Vrienden editie</span>
+<span class="font-label-bold text-label-bold text-on-surface-variant tracking-wide">140 kaarten</span>
+</div>
+</div>
+<span class="material-symbols-outlined text-outline text-[28px]" data-icon="radio_button_unchecked">radio_button_unchecked</span>
+</button>
+<!-- Set Card 3: Werkborrel editie -->
+<button class="w-full text-left bg-surface-container-low border border-outline-variant rounded-xl p-md flex justify-between items-center shadow-[0px_4px_12px_rgba(0,0,0,0.15)]">
+<div class="flex items-center gap-md">
+<div class="w-12 h-12 rounded-full bg-tertiary-container flex items-center justify-center text-on-tertiary-container">
+<span class="material-symbols-outlined" data-icon="work">work</span>
+</div>
+<div class="flex flex-col">
+<span class="font-body-lg text-body-lg text-on-surface font-semibold">Werkborrel editie</span>
+<span class="font-label-bold text-label-bold text-on-surface-variant tracking-wide">118 kaarten</span>
+</div>
+</div>
+<span class="material-symbols-outlined text-outline text-[28px]" data-icon="radio_button_unchecked">radio_button_unchecked</span>
+</button>
+</section>
+<!-- Helper note -->
+<p class="font-label-bold text-label-bold text-on-surface-variant tracking-wide flex items-center gap-xs">
+<span class="material-symbols-outlined text-[16px]" data-icon="info">info</span>
+De seed testset is altijd beschikbaar, ook als er nog geen echte sets zijn toegevoegd.
+</p>
+<!-- CTA Section -->
+<section class="mt-base">
+<button class="tactile-button w-full bg-secondary-container text-on-secondary-container py-md rounded-xl font-headline-lg flex items-center justify-center gap-base active:scale-95 transition-all">
+<span class="material-symbols-outlined" data-icon="play_arrow" style="font-variation-settings: 'FILL' 1;">play_arrow</span>
+                    START SPEL
+                </button>
+</section>
+</div>
+</main>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 w-full z-50 flex justify-around items-center px-4 pb-8 pt-4 bg-surface-container-low/90 backdrop-blur-xl border-t-0 shadow-[0px_-10px_30px_rgba(0,0,0,0.3)] rounded-t-lg">
+<a class="flex flex-col items-center justify-center text-on-surface-variant px-4 py-2 hover:bg-surface-bright/20 transition-all" href="#">
+<span class="material-symbols-outlined" data-icon="sports_esports" style="font-variation-settings: 'FILL' 1;">sports_esports</span>
+<span class="font-label-bold text-label-bold">Play</span>
+</a>
+<a class="flex flex-col items-center justify-center bg-secondary-container text-on-secondary-container rounded-xl px-4 py-2 hover:bg-surface-bright/20 transition-all" href="#">
+<span class="material-symbols-outlined" data-icon="style" style="font-variation-settings: 'FILL' 1;">style</span>
+<span class="font-label-bold text-label-bold">Sets</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant px-4 py-2 hover:bg-surface-bright/20 transition-all" href="#">
+<span class="material-symbols-outlined" data-icon="menu_book">menu_book</span>
+<span class="font-label-bold text-label-bold">Rules</span>
+</a>
+</nav>
+<script>
+        // Selection interaction: tap a set card to select it
+        const setCards = document.querySelectorAll('main section:nth-of-type(1) button');
+        setCards.forEach((card) => {
+            card.addEventListener('click', () => {
+                setCards.forEach((c) => {
+                    c.classList.remove('bg-surface-container-high', 'border-primary');
+                    c.classList.add('bg-surface-container-low', 'border-outline-variant');
+                    const icon = c.querySelector('[data-icon="check_circle"], [data-icon="radio_button_unchecked"]');
+                    if (icon) {
+                        icon.setAttribute('data-icon', 'radio_button_unchecked');
+                        icon.textContent = 'radio_button_unchecked';
+                        icon.classList.remove('text-primary');
+                        icon.classList.add('text-outline');
+                    }
+                });
+                card.classList.remove('bg-surface-container-low', 'border-outline-variant');
+                card.classList.add('bg-surface-container-high', 'border-primary');
+                const icon = card.querySelector('[data-icon="check_circle"], [data-icon="radio_button_unchecked"]');
+                if (icon) {
+                    icon.setAttribute('data-icon', 'check_circle');
+                    icon.textContent = 'check_circle';
+                    icon.classList.remove('text-outline');
+                    icon.classList.add('text-primary');
+                }
+                console.log('Kaartenset geselecteerd:', card.querySelector('span.font-body-lg').textContent);
+            });
+        });
+
+        const startBtn = document.querySelector('.tactile-button.bg-secondary-container');
+        if (startBtn) {
+            startBtn.addEventListener('click', () => {
+                startBtn.classList.add('scale-95');
+                setTimeout(() => startBtn.classList.remove('scale-95'), 100);
+                console.log('Spel start!');
+            });
+        }
+    </script>
+</body></html>
