@@ -3,7 +3,7 @@ import userEvent from '@testing-library/user-event'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import App from './App'
 import { buildSessionCardPool } from './features/cards/buildSessionCardPool'
-import type { CardSet } from './features/cards/card.types'
+import type { Card, CardSet } from './features/cards/card.types'
 import { cardSetCatalog } from './features/cards/data/card-set-catalog'
 import { seedCardSet } from './features/cards/data/seed-card-set'
 
@@ -248,5 +248,59 @@ describe('App card-set selection lock across replay (US1, FR-012)', () => {
 
     await user.click(screen.getByRole('button', { name: /spel starten/i }))
     expect(screen.getByText('Kaartenset')).toBeInTheDocument()
+  })
+})
+
+describe('App virus concurrency cap (US1, feature 011)', () => {
+  beforeEach(() => {
+    window.localStorage.clear()
+    mockedBuildSessionCardPool.mockReset()
+  })
+
+  it('caps concurrently active viruses at 4 — a 5th virus card is skipped and the next eligible card is drawn instead', async () => {
+    const virusCards: Card[] = Array.from({ length: 5 }, (_, i) => ({
+      id: `virus-${i + 1}`,
+      type: 'virus',
+      targeting: { kind: 'general' },
+      instructionText: `Virus effect nummer ${i + 1} is nu actief.`,
+      liftText: `{player} is genezen van virus nummer ${i + 1}.`,
+    }))
+    const assignmentCard: Card = {
+      id: 'assignment-a',
+      type: 'assignment',
+      targeting: { kind: 'general' },
+      instructionText: 'De volgende opdracht wordt uitgevoerd.',
+    }
+    const capTestSet: CardSet = {
+      id: 'cap-test-set',
+      name: 'Cap test set',
+      cards: [...virusCards, assignmentCard],
+    }
+
+    setCatalog([capTestSet])
+    mockedBuildSessionCardPool.mockReturnValue({
+      poolCardIds: [...virusCards.map((c) => c.id), assignmentCard.id],
+      remainingCardIds: [...virusCards.map((c) => c.id), assignmentCard.id],
+      hasEnded: false,
+    })
+
+    const user = userEvent.setup()
+    render(<App />)
+
+    await startSession(user, ['Yara', 'Tom', 'Sam'])
+
+    // Draw the first 4 virus cards — each becomes active for all 3 players.
+    for (let i = 0; i < 4; i++) {
+      await draw(user)
+    }
+    expect(screen.getAllByText('×4').length).toBeGreaterThan(0)
+
+    // The 5th virus card is skipped (cap is full); the assignment card is shown instead, and
+    // the active-virus badge never reaches ×5.
+    await draw(user)
+
+    expect(screen.getByText(assignmentCard.instructionText)).toBeInTheDocument()
+    expect(screen.queryByText('×5')).not.toBeInTheDocument()
+    expect(screen.getAllByText('×4').length).toBeGreaterThan(0)
   })
 })
