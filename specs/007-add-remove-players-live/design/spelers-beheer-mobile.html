@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="nl"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport"/>
+<title>Party Pulse - Badzwanzen</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;600;700;800;900&family=Be+Vietnam+Pro:wght@400;500;700&family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@100..900&family=Rubik:wght@100..900&display=swap" rel="stylesheet"/>
+<style>.material-symbols-outlined {
+    font-variation-settings: "FILL" 0, "wght" 400, "GRAD" 0, "opsz" 24
+    }
+.tactile-button {
+    box-shadow: 0 4px 0 0 rgba(0, 0, 0, 0.3);
+    transition: all 0.1s ease-active
+    }
+.tactile-button:active {
+    transform: translatey(2px);
+    box-shadow: 0 2px 0 0 rgba(0, 0, 0, 0.3)
+    }
+.grain-overlay {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0.05;
+    pointer-events: none;
+    background-image: url(https://lh3.googleusercontent.com/aida-public/AB6AXuAImPkUJcZQmaCd16ULCp40r8dpvbxtHCbK8obmoT9UI1uorqChO-AxQnIwXfGBoegUmlv4ovXfieINSccpHV0mTuZEq55EV3RHt9e_RqSscBnbiHPXahQRG1SokPSVF5c89CdEHyqX5xWydn9ppSZMqstdEbLepa3Q2Xl0s658iGYmVsd-tEITxrzgRe0Xb_bKWW09wu03jJxIBRmMQA53GNbtVAcHbKOcpC8qRx5LaaA22FeOeDalO1xUTQ6fdS48yVdr0J6P3No)
+    }
+body {
+    -webkit-tap-highlight-color: transparent;
+    overscroll-behavior-y: contain
+    }</style>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "on-primary": "#002a78",
+                      "surface-container-low": "#131b2e",
+                      "surface": "#0b1326",
+                      "surface-container-highest": "#2d3449",
+                      "secondary-fixed-dim": "#4ae176",
+                      "on-surface-variant": "#c3c6d7",
+                      "on-tertiary-container": "#ffecea",
+                      "secondary-container": "#00b954",
+                      "primary-fixed-dim": "#b4c5ff",
+                      "surface-container": "#171f33",
+                      "surface-bright": "#31394d",
+                      "on-error-container": "#ffdad6",
+                      "background": "#0b1326",
+                      "tertiary": "#ffb3ad",
+                      "on-primary-fixed-variant": "#003ea8",
+                      "surface-variant": "#2d3449",
+                      "on-secondary-fixed": "#002109",
+                      "on-secondary-container": "#004119",
+                      "inverse-on-surface": "#283044",
+                      "inverse-surface": "#dae2fd",
+                      "on-tertiary": "#68000a",
+                      "on-secondary-fixed-variant": "#005321",
+                      "error-container": "#93000a",
+                      "outline-variant": "#434655",
+                      "surface-dim": "#0b1326",
+                      "on-error": "#690005",
+                      "surface-tint": "#b4c5ff",
+                      "inverse-primary": "#0053db",
+                      "surface-container-lowest": "#060e20",
+                      "on-tertiary-fixed-variant": "#930013",
+                      "secondary-fixed": "#6bff8f",
+                      "on-background": "#dae2fd",
+                      "outline": "#8d90a0",
+                      "primary-fixed": "#dbe1ff",
+                      "primary": "#b4c5ff",
+                      "on-tertiary-fixed": "#410004",
+                      "surface-container-high": "#222a3d",
+                      "primary-container": "#2563eb",
+                      "tertiary-fixed": "#ffdad7",
+                      "secondary": "#4ae176",
+                      "on-surface": "#dae2fd",
+                      "on-primary-fixed": "#00174b",
+                      "tertiary-fixed-dim": "#ffb3ad",
+                      "tertiary-container": "#cf2c30",
+                      "on-primary-container": "#eeefff",
+                      "error": "#ffb4ab",
+                      "on-secondary": "#003915"
+              },
+              "borderRadius": {
+                      "DEFAULT": "1rem",
+                      "lg": "2rem",
+                      "xl": "3rem",
+                      "full": "9999px"
+              },
+              "spacing": {
+                      "xs": "4px",
+                      "lg": "40px",
+                      "container-margin": "20px",
+                      "sm": "12px",
+                      "md": "24px",
+                      "xl": "64px",
+                      "base": "8px",
+                      "gutter": "16px"
+              },
+              "fontFamily": {
+                      "label-bold": ["Rubik"],
+                      "headline-lg": ["Rubik"],
+                      "body-md": ["Be Vietnam Pro"],
+                      "display-xl": ["Rubik"],
+                      "headline-lg-mobile": ["Rubik"],
+                      "body-lg": ["Be Vietnam Pro"]
+              },
+              "fontSize": {
+                      "label-bold": ["14px", {"lineHeight": "20px", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                      "headline-lg": ["32px", {"lineHeight": "40px", "fontWeight": "700"}],
+                      "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                      "display-xl": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "800"}],
+                      "headline-lg-mobile": ["28px", {"lineHeight": "36px", "fontWeight": "700"}],
+                      "body-lg": ["20px", {"lineHeight": "30px", "fontWeight": "500"}]
+              }
+            },
+          },
+        }
+    </script>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-background min-h-screen flex flex-col font-body-md overflow-x-hidden">
+<!-- Top App Bar -->
+<header class="bg-surface/80 backdrop-blur-md flex justify-between items-center px-container-margin py-base w-full fixed top-0 z-50">
+<h1 class="font-headline-lg-mobile text-headline-lg-mobile font-black text-secondary tracking-tighter">PARTY PULSE</h1>
+<button class="hover:scale-105 transition-transform active:scale-95 transition-all text-primary">
+<span class="material-symbols-outlined text-[28px]" data-icon="settings">settings</span>
+</button>
+</header>
+<main class="flex-1 w-full max-w-[500px] mx-auto px-container-margin pt-24 pb-32">
+<!-- Header Text -->
+<div class="mb-md">
+<h2 class="font-headline-lg-mobile text-headline-lg-mobile text-on-surface mb-xs">Spelers</h2>
+<p class="font-body-md text-body-md text-on-surface-variant">Wie speelt er nu mee?</p>
+</div>
+<!-- Add Player Section -->
+<section class="mb-lg">
+<div class="flex gap-sm items-center">
+<div class="relative flex-1 group">
+<input class="w-full h-14 bg-surface-container-highest/30 border-2 border-primary rounded-xl px-md text-body-lg font-body-lg focus:outline-none focus:ring-2 focus:ring-primary/50 placeholder:text-outline transition-all" placeholder="Naam invoeren..." type="text"/>
+</div>
+<button class="w-14 h-14 rounded-full bg-primary-container text-on-primary-container flex items-center justify-center tactile-button active:scale-90 transition-all">
+<span class="material-symbols-outlined font-bold" data-icon="add">add</span>
+</button>
+</div>
+</section>
+<!-- Player Counter -->
+<div class="flex justify-between items-end mb-sm px-xs">
+<span class="font-label-bold text-label-bold text-on-surface uppercase tracking-widest">Spelers (4/20)</span>
+<span class="font-label-bold text-label-bold text-outline">Minimaal 2 nodig</span>
+</div>
+<!-- Player List -->
+<div class="space-y-sm">
+<!-- Row 1: Mila (Confirmation State) -->
+<div class="bg-surface-container-high rounded-lg p-sm flex items-center justify-between border-l-4 border-error relative overflow-hidden">
+<div class="grain-overlay"></div>
+<div class="flex items-center gap-sm">
+<div class="w-10 h-10 rounded-full bg-tertiary-container text-on-tertiary-container flex items-center justify-center font-bold">M</div>
+<span class="font-body-lg text-body-lg text-error">Verwijder Mila?</span>
+</div>
+<div class="flex gap-xs">
+<button class="bg-error-container text-on-error-container px-sm py-xs rounded-full font-label-bold text-label-bold tactile-button">Ja</button>
+<button class="bg-surface-bright text-on-surface px-sm py-xs rounded-full font-label-bold text-label-bold tactile-button">Nee</button>
+</div>
+</div>
+<!-- Row 2: Jasper (Active Row) -->
+<div class="bg-surface-container rounded-lg p-sm flex items-center justify-between group">
+<div class="flex items-center gap-sm">
+<div class="w-10 h-10 rounded-full bg-primary-container/40 text-primary flex items-center justify-center font-bold">J</div>
+<span class="font-body-lg text-body-lg text-on-surface">Jasper</span>
+</div>
+<button class="p-xs text-outline hover:text-error transition-colors active:scale-90">
+<span class="material-symbols-outlined" data-icon="delete">delete</span>
+</button>
+</div>
+<!-- Row 3: Timo (Disabled/Locked) -->
+<div class="bg-surface-container/50 rounded-lg p-sm flex items-center justify-between opacity-80">
+<div class="flex items-center gap-sm">
+<div class="w-10 h-10 rounded-full bg-surface-container-highest text-outline flex items-center justify-center font-bold">T</div>
+<span class="font-body-lg text-body-lg text-on-surface">Timo</span>
+</div>
+<button class="p-xs text-outline/30 cursor-not-allowed">
+<span class="material-symbols-outlined" data-icon="delete">delete</span>
+</button>
+</div>
+<!-- Row 4: Eva (Disabled/Locked) -->
+<div class="bg-surface-container/50 rounded-lg p-sm flex items-center justify-between opacity-80">
+<div class="flex items-center gap-sm">
+<div class="w-10 h-10 rounded-full bg-surface-container-highest text-outline flex items-center justify-center font-bold">E</div>
+<span class="font-body-lg text-body-lg text-on-surface">Eva</span>
+</div>
+<button class="p-xs text-outline/30 cursor-not-allowed">
+<span class="material-symbols-outlined" data-icon="delete">delete</span>
+</button>
+</div>
+</div>
+<!-- Decorative Action Hint -->
+<div class="mt-lg flex flex-col items-center gap-base opacity-40">
+<span class="material-symbols-outlined text-[40px]" data-icon="group_add">group_add</span>
+<p class="font-label-bold text-label-bold text-center">Nodig meer vrienden uit om het leuker te maken!</p>
+</div>
+</main>
+<!-- Bottom Navigation Bar -->
+<nav class="fixed bottom-0 w-full z-50 flex justify-around items-center px-4 pb-8 pt-4 bg-surface-container-low backdrop-blur-xl shadow-[0px_-10px_30px_rgba(0,0,0,0.3)] rounded-t-lg">
+<a class="flex flex-col items-center justify-center text-on-surface-variant px-4 py-2 hover:bg-surface-bright/20 active:scale-90 transition-all duration-150" href="#">
+<span class="material-symbols-outlined" data-icon="sports_esports">sports_esports</span>
+<span class="font-label-bold text-label-bold">Play</span>
+</a>
+<a class="flex flex-col items-center justify-center bg-secondary-container text-on-secondary-container rounded-xl px-4 py-2 active:scale-90 transition-all duration-150" href="#">
+<span class="material-symbols-outlined" data-icon="group" style="font-variation-settings: 'FILL' 1;">group</span>
+<span class="font-label-bold text-label-bold">Players</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant px-4 py-2 hover:bg-surface-bright/20 active:scale-90 transition-all duration-150" href="#">
+<span class="material-symbols-outlined" data-icon="menu_book">menu_book</span>
+<span class="font-label-bold text-label-bold">Rules</span>
+</a>
+</nav>
+<script>
+        // Micro-interactions for tactile feel
+        document.querySelectorAll('.tactile-button').forEach(button => {
+            button.addEventListener('touchstart', function() {
+                this.classList.add('scale-95');
+            });
+            button.addEventListener('touchend', function() {
+                this.classList.remove('scale-95');
+            });
+        });
+
+        // Simple visibility toggle for the confirmation (Demo purpose)
+        const deleteMilaNo = document.querySelector('.bg-surface-bright');
+        if(deleteMilaNo) {
+            deleteMilaNo.addEventListener('click', () => {
+               alert('Behouden!');
+            });
+        }
+    </script>
+</body></html>
