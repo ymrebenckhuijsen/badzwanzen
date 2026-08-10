@@ -191,10 +191,14 @@ missed prop/state wiring in T008/T009/T019) — do not add new components for th
 
 ## Phase 6: Polish & Cross-Cutting Concerns
 
-- [ ] T021 [P] Run `npm run lint` and fix any findings
-- [ ] T022 Run `npm run build` (type-check + production build) and fix any errors
-- [ ] T023 Run through `quickstart.md`'s manual run-throughs (US1, US2, US3) against `npm run
-  dev` to confirm the feature works end-to-end in a real browser, not just under test
+- [X] T021 [P] Run `npm run lint` and fix any findings
+- [X] T022 Run `npm run build` (type-check + production build) and fix any errors
+- [X] T023 Run through `quickstart.md`'s manual run-throughs (US1, US2, US3) against `npm run
+  dev` to confirm the feature works end-to-end in a real browser, not just under test —
+  verified live via browser automation: added "Nieuwkomer" mid-game (list/count updated
+  immediately, drawn card progress untouched), removed "Yara" via the inline Ja/Nee confirm,
+  removed a second player down to the 2-player floor (delete icons became disabled, "Minimaal 2
+  nodig" shown), closed the view with the original drawn card still on screen
 
 ---
 
