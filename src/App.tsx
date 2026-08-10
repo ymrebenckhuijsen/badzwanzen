@@ -1,6 +1,10 @@
 import { useState } from 'react'
 import type { Player } from './features/players/types'
 import { PlayerSetupScreen } from './features/players/PlayerSetupScreen'
+import { LivePlayerManagementScreen } from './features/players/LivePlayerManagementScreen'
+import { getActivePlayers } from './features/players/activePlayers'
+import type { AddPlayerResult } from './features/players/usePlayers'
+import { setPlayers as persistPlayers } from './lib/storage'
 import { buildSessionCardPool } from './features/cards/buildSessionCardPool'
 import { CardSetSelectionScreen } from './features/cards/CardSetSelectionScreen'
 import { useDrawPile } from './features/cards/useDrawPile'
@@ -17,17 +21,20 @@ interface GameScreenProps {
   cardSet: CardSet
   onPlayAgain: () => void
   onChangePlayers: () => void
+  onAddPlayer: (name: string) => AddPlayerResult
 }
 
-function GameScreen({ players, cardSet, onPlayAgain, onChangePlayers }: GameScreenProps) {
+function GameScreen({ players, cardSet, onPlayAgain, onChangePlayers, onAddPlayer }: GameScreenProps) {
+  const activePlayers = getActivePlayers(players)
   const [pool] = useState<SessionCardPool>(() => buildSessionCardPool(cardSet))
   const { effects, startEffects, advanceOnAssignmentGameDraw, forceLiftAll } = useVirusEffects()
   const activeVirusCount = new Set(
     effects.filter((e) => e.status === 'active').map((e) => e.cardId),
   ).size
-  const { draw, hasEnded } = useDrawPile(pool, cardSet, players, activeVirusCount)
+  const { draw, hasEnded } = useDrawPile(pool, cardSet, activePlayers, activeVirusCount)
   const [current, setCurrent] = useState<DrawnCard | null>(null)
   const [liftQueue, setLiftQueue] = useState<ActiveVirusEffect[]>([])
+  const [view, setView] = useState<'card' | 'players'>('card')
 
   function handleDraw() {
     const drawn = draw()
@@ -72,10 +79,28 @@ function GameScreen({ players, cardSet, onPlayAgain, onChangePlayers }: GameScre
     )
   }
 
+  if (view === 'players') {
+    return (
+      <LivePlayerManagementScreen
+        players={players}
+        onAdd={onAddPlayer}
+        onClose={() => setView('card')}
+      />
+    )
+  }
+
   return (
     <div className="mx-auto flex min-h-svh max-w-md flex-col gap-6 bg-surface p-6 text-on-surface">
-      <header className="pt-4 text-center">
+      <header className="flex items-center justify-between pt-4">
         <h1 className="font-display text-headline-lg-mobile text-on-surface">Badzwanzen</h1>
+        <button
+          type="button"
+          aria-label="Spelers beheren"
+          onClick={() => setView('players')}
+          className="rounded-full border-b-4 border-primary-fixed-dim bg-primary-container px-4 py-2 font-display text-label-bold text-on-primary-container shadow-lg transition active:translate-y-0.5 active:border-b-2"
+        >
+          Spelers
+        </button>
       </header>
 
       {currentLift && currentLiftCard ? (
@@ -83,9 +108,9 @@ function GameScreen({ players, cardSet, onPlayAgain, onChangePlayers }: GameScre
           <VirusLiftCard
             liftText={currentLiftCard.liftText ?? ''}
             targetPlayerId={currentLift.targetPlayerId}
-            players={players}
+            players={activePlayers}
           />
-          <ActiveVirusList effects={effects} players={players} />
+          <ActiveVirusList effects={effects} players={activePlayers} />
           <button
             type="button"
             onClick={handleAcknowledgeLift}
@@ -100,11 +125,11 @@ function GameScreen({ players, cardSet, onPlayAgain, onChangePlayers }: GameScre
             <DrawnCardView
               card={currentCard}
               targetPlayerIds={current.targetPlayerIds}
-              players={players}
+              players={activePlayers}
             />
           )}
 
-          <ActiveVirusList effects={effects} players={players} />
+          <ActiveVirusList effects={effects} players={activePlayers} />
 
           <button
             type="button"
@@ -119,10 +144,27 @@ function GameScreen({ players, cardSet, onPlayAgain, onChangePlayers }: GameScre
   )
 }
 
+const MAX_PLAYERS = 20
+
 function App() {
   const [players, setPlayers] = useState<Player[] | null>(null)
   const [cardSet, setCardSet] = useState<CardSet | null>(null)
   const [sessionKey, setSessionKey] = useState(0)
+
+  function handleAddPlayerDuringGame(name: string): AddPlayerResult {
+    const trimmed = name.trim()
+    if (trimmed === '') return { ok: false, reason: 'empty' }
+
+    const current = players ?? []
+    const active = getActivePlayers(current)
+    if (active.some((p) => p.name === trimmed)) return { ok: false, reason: 'duplicate' }
+    if (active.length >= MAX_PLAYERS) return { ok: false, reason: 'max' }
+
+    const next = [...current, { id: crypto.randomUUID(), name: trimmed, order: current.length }]
+    setPlayers(next)
+    persistPlayers(next)
+    return { ok: true }
+  }
 
   if (!players) {
     return <PlayerSetupScreen onStartGame={setPlayers} />
@@ -142,6 +184,7 @@ function App() {
         setPlayers(null)
         setCardSet(null)
       }}
+      onAddPlayer={handleAddPlayerDuringGame}
     />
   )
 }

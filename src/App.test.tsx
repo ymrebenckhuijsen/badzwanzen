@@ -205,6 +205,34 @@ describe('App card-set selection (US1, feature 010)', () => {
   })
 })
 
+describe('App live player management (007 US1)', () => {
+  beforeEach(() => {
+    window.localStorage.clear()
+    mockedBuildSessionCardPool.mockReset()
+  })
+
+  it('adds a late player mid-game via the "Spelers" entry point without resetting progress', async () => {
+    mockedBuildSessionCardPool.mockReturnValue(twoCardPool())
+    const user = userEvent.setup()
+    render(<App />)
+
+    await startSession(user, ['Yara', 'Tom'])
+    await draw(user)
+    expect(screen.getByText(CARD_A_TEXT)).toBeInTheDocument()
+
+    await user.click(screen.getByRole('button', { name: /spelers/i }))
+    expect(screen.getByRole('heading', { name: /spelers/i })).toBeInTheDocument()
+
+    await addPlayer(user, 'Nieuwkomer')
+    expect(screen.getByText('Nieuwkomer')).toBeInTheDocument()
+
+    await user.click(screen.getByRole('button', { name: /sluiten/i }))
+
+    // Existing progress (the already-drawn card) is untouched by the round trip.
+    expect(screen.getByText(CARD_A_TEXT)).toBeInTheDocument()
+  })
+})
+
 describe('App card-set selection lock across replay (US1, FR-012)', () => {
   beforeEach(() => {
     window.localStorage.clear()

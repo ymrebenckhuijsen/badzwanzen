@@ -36,13 +36,13 @@ Proceed straight to Phase 2.
 
 **Purpose**: The `status` field and the active-players filter both US1 and US2 build on.
 
-- [ ] T001 [P] Add optional `status?: 'active' | 'removed'` field to the `Player` interface in
+- [X] T001 [P] Add optional `status?: 'active' | 'removed'` field to the `Player` interface in
   `src/features/players/types.ts` (data-model.md) — no behavior change, purely additive; all
   existing tests must still pass unmodified since the field defaults to absent/active
-- [ ] T002 [P] Write failing test in `src/features/players/activePlayers.test.ts`:
+- [X] T002 [P] Write failing test in `src/features/players/activePlayers.test.ts`:
   `getActivePlayers(players)` excludes players with `status: 'removed'` and includes players
   with `status: 'active'` or no `status` field at all
-- [ ] T003 Implement `getActivePlayers` in `src/features/players/activePlayers.ts` per
+- [X] T003 Implement `getActivePlayers` in `src/features/players/activePlayers.ts` per
   data-model.md's "Derived: active players" — makes T002 pass (depends on T001)
 
 **Checkpoint**: Foundation ready — user story implementation can begin.
@@ -62,17 +62,17 @@ game's existing progress (drawn card, remaining pool) is untouched.
 
 ### Tests for User Story 1
 
-- [ ] T004 [P] [US1] Write failing test in
+- [X] T004 [P] [US1] Write failing test in
   `src/features/players/LivePlayerManagementScreen.test.tsx` (new file): given a `players` prop
   and an `onAdd` callback, renders a "Spelers" heading and a "SPELERS (n/20)" count derived via
   `getActivePlayers`, plus `<AddPlayerControl>`; submitting a valid new name via the "+" flow
   calls `onAdd` and (given an `{ ok: true }` result) the new player appears in the rendered list
   (FR-001)
-- [ ] T005 [P] [US1] Write failing test in the same file: submitting a name that duplicates an
+- [X] T005 [P] [US1] Write failing test in the same file: submitting a name that duplicates an
   existing active player, or a 21st player when 20 are already active, surfaces the same Dutch
   error copy used pre-game ("Deze naam bestaat al." / "Maximum van 20 spelers bereikt.") without
   adding the player (US1 AC2/AC3, FR-002)
-- [ ] T006 [P] [US1] Write failing test in `src/App.test.tsx`: from an in-progress `GameScreen`
+- [X] T006 [P] [US1] Write failing test in `src/App.test.tsx`: from an in-progress `GameScreen`
   (a session with a card already drawn), tap the "Spelers" header button, add a new player via
   "+", then close the view — assert the game's existing progress (the already-drawn card /
   remaining pool state) is unchanged (US1 AC1: "zonder dat het spel of de voortgang... gereset
@@ -80,19 +80,19 @@ game's existing progress (drawn card, remaining pool) is untouched.
 
 ### Implementation for User Story 1
 
-- [ ] T007 [US1] Implement `LivePlayerManagementScreen` in
+- [X] T007 [US1] Implement `LivePlayerManagementScreen` in
   `src/features/players/LivePlayerManagementScreen.tsx` per data-model.md/contract: "Spelers"
   heading, "SPELERS (n/20)" count via `getActivePlayers`, `<AddPlayerControl onAdd={onAdd} />`,
   and the active player list rendered read-only for now (per-row delete affordance is added in
   Phase 4/US2 — do not build it here) — makes T004/T005 pass (depends on T003)
-- [ ] T008 [US1] In `src/App.tsx`: add a `view: 'card' | 'players'` state and a header button to
+- [X] T008 [US1] In `src/App.tsx`: add a `view: 'card' | 'players'` state and a header button to
   `GameScreen` that sets it to `'players'` (visible/reachable at any time per FR-011); when
   `view === 'players'`, render `<LivePlayerManagementScreen>` instead of the card UI; lift an
   `addPlayer` path from the top-level `App` component down into `GameScreen` (`App` needs its
   own `usePlayers()`-backed add capability rather than the bare `useState<Player[] | null>` it
   has today) and wire it to `LivePlayerManagementScreen`'s `onAdd` — makes T006 pass (depends on
   T007)
-- [ ] T009 [US1] In `GameScreen` (`src/App.tsx`), compute `activePlayers =
+- [X] T009 [US1] In `GameScreen` (`src/App.tsx`), compute `activePlayers =
   getActivePlayers(players)` and pass it — not the raw `players` prop — into `useDrawPile`,
   `<DrawnCardView>`, `<ActiveVirusList>`, `<VirusLiftCard>`, and `<LivePlayerManagementScreen>`,
   so a newly added player is eligible for the very next draw (US1 AC4); `<EndOfGameScreen>`
