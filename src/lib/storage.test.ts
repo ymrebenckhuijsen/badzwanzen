@@ -1,8 +1,9 @@
 import { beforeEach, describe, expect, it } from 'vitest'
 import type { Player } from '../features/players/types'
-import { getPlayers, setPlayers } from './storage'
+import { getPlayers, getSelectedCardSetId, setPlayers, setSelectedCardSetId } from './storage'
 
 const STORAGE_KEY = 'badzwanzen:players'
+const CARD_SET_STORAGE_KEY = 'badzwanzen:selected-card-set-id'
 
 describe('storage', () => {
   beforeEach(() => {
@@ -36,5 +37,27 @@ describe('storage', () => {
     window.localStorage.setItem(STORAGE_KEY, 'not json')
 
     expect(getPlayers()).toEqual([])
+  })
+})
+
+describe('storage (selected card set, US3)', () => {
+  beforeEach(() => {
+    window.localStorage.clear()
+  })
+
+  it('returns null when nothing is stored yet', () => {
+    expect(getSelectedCardSetId()).toBeNull()
+  })
+
+  it('round-trips a selected card set id through window.localStorage', () => {
+    setSelectedCardSetId('friends')
+
+    expect(getSelectedCardSetId()).toBe('friends')
+  })
+
+  it('persists under the badzwanzen:selected-card-set-id key', () => {
+    setSelectedCardSetId('friends')
+
+    expect(window.localStorage.getItem(CARD_SET_STORAGE_KEY)).toBe('friends')
   })
 })

@@ -2,10 +2,10 @@ import { useState } from 'react'
 import type { Player } from './features/players/types'
 import { PlayerSetupScreen } from './features/players/PlayerSetupScreen'
 import { buildSessionCardPool } from './features/cards/buildSessionCardPool'
-import { seedCardSet } from './features/cards/data/seed-card-set'
+import { CardSetSelectionScreen } from './features/cards/CardSetSelectionScreen'
 import { useDrawPile } from './features/cards/useDrawPile'
 import { DrawnCardView } from './features/cards/DrawnCardView'
-import type { DrawnCard, SessionCardPool } from './features/cards/card.types'
+import type { CardSet, DrawnCard, SessionCardPool } from './features/cards/card.types'
 import { useVirusEffects } from './features/virus/useVirusEffects'
 import { ActiveVirusList } from './features/virus/ActiveVirusList'
 import { VirusLiftCard } from './features/virus/VirusLiftCard'
@@ -14,13 +14,14 @@ import { EndOfGameScreen } from './features/end-of-game/EndOfGameScreen'
 
 interface GameScreenProps {
   players: Player[]
+  cardSet: CardSet
   onPlayAgain: () => void
   onChangePlayers: () => void
 }
 
-function GameScreen({ players, onPlayAgain, onChangePlayers }: GameScreenProps) {
-  const [pool] = useState<SessionCardPool>(() => buildSessionCardPool(seedCardSet))
-  const { draw, hasEnded } = useDrawPile(pool, seedCardSet, players)
+function GameScreen({ players, cardSet, onPlayAgain, onChangePlayers }: GameScreenProps) {
+  const [pool] = useState<SessionCardPool>(() => buildSessionCardPool(cardSet))
+  const { draw, hasEnded } = useDrawPile(pool, cardSet, players)
   const { effects, startEffects, advanceOnAssignmentGameDraw, forceLiftAll } = useVirusEffects()
   const [current, setCurrent] = useState<DrawnCard | null>(null)
   const [liftQueue, setLiftQueue] = useState<ActiveVirusEffect[]>([])
@@ -54,10 +55,10 @@ function GameScreen({ players, onPlayAgain, onChangePlayers }: GameScreenProps) 
 
   const currentLift = liftQueue[0]
   const currentLiftCard = currentLift
-    ? seedCardSet.cards.find((c) => c.id === currentLift.cardId)
+    ? cardSet.cards.find((c) => c.id === currentLift.cardId)
     : null
 
-  const currentCard = current ? seedCardSet.cards.find((c) => c.id === current.cardId) : null
+  const currentCard = current ? cardSet.cards.find((c) => c.id === current.cardId) : null
 
   // Pending virus lifts (from FR-018's forced end-of-session lift) must be acknowledged first —
   // the end-of-game screen replaces the whole card-loop screen, so it only takes over once the
@@ -117,18 +118,27 @@ function GameScreen({ players, onPlayAgain, onChangePlayers }: GameScreenProps) 
 
 function App() {
   const [players, setPlayers] = useState<Player[] | null>(null)
+  const [cardSet, setCardSet] = useState<CardSet | null>(null)
   const [sessionKey, setSessionKey] = useState(0)
 
   if (!players) {
     return <PlayerSetupScreen onStartGame={setPlayers} />
   }
 
+  if (!cardSet) {
+    return <CardSetSelectionScreen onContinue={setCardSet} />
+  }
+
   return (
     <GameScreen
       key={sessionKey}
       players={players}
+      cardSet={cardSet}
       onPlayAgain={() => setSessionKey((k) => k + 1)}
-      onChangePlayers={() => setPlayers(null)}
+      onChangePlayers={() => {
+        setPlayers(null)
+        setCardSet(null)
+      }}
     />
   )
 }
