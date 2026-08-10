@@ -3,7 +3,7 @@ import type { Player } from './features/players/types'
 import { PlayerSetupScreen } from './features/players/PlayerSetupScreen'
 import { LivePlayerManagementScreen } from './features/players/LivePlayerManagementScreen'
 import { getActivePlayers } from './features/players/activePlayers'
-import type { AddPlayerResult } from './features/players/usePlayers'
+import type { AddPlayerResult, RemoveLivePlayerResult } from './features/players/usePlayers'
 import { setPlayers as persistPlayers } from './lib/storage'
 import { buildSessionCardPool } from './features/cards/buildSessionCardPool'
 import { CardSetSelectionScreen } from './features/cards/CardSetSelectionScreen'
@@ -22,9 +22,17 @@ interface GameScreenProps {
   onPlayAgain: () => void
   onChangePlayers: () => void
   onAddPlayer: (name: string) => AddPlayerResult
+  onRetirePlayer: (id: string) => RemoveLivePlayerResult
 }
 
-function GameScreen({ players, cardSet, onPlayAgain, onChangePlayers, onAddPlayer }: GameScreenProps) {
+function GameScreen({
+  players,
+  cardSet,
+  onPlayAgain,
+  onChangePlayers,
+  onAddPlayer,
+  onRetirePlayer,
+}: GameScreenProps) {
   const activePlayers = getActivePlayers(players)
   const [pool] = useState<SessionCardPool>(() => buildSessionCardPool(cardSet))
   const { effects, startEffects, advanceOnAssignmentGameDraw, forceLiftAll } = useVirusEffects()
@@ -84,6 +92,7 @@ function GameScreen({ players, cardSet, onPlayAgain, onChangePlayers, onAddPlaye
       <LivePlayerManagementScreen
         players={players}
         onAdd={onAddPlayer}
+        onRetire={onRetirePlayer}
         onClose={() => setView('card')}
       />
     )
@@ -145,6 +154,7 @@ function GameScreen({ players, cardSet, onPlayAgain, onChangePlayers, onAddPlaye
 }
 
 const MAX_PLAYERS = 20
+const MIN_ACTIVE_PLAYERS = 2
 
 function App() {
   const [players, setPlayers] = useState<Player[] | null>(null)
@@ -161,6 +171,17 @@ function App() {
     if (active.length >= MAX_PLAYERS) return { ok: false, reason: 'max' }
 
     const next = [...current, { id: crypto.randomUUID(), name: trimmed, order: current.length }]
+    setPlayers(next)
+    persistPlayers(next)
+    return { ok: true }
+  }
+
+  function handleRetirePlayerDuringGame(id: string): RemoveLivePlayerResult {
+    const current = players ?? []
+    const activeCount = getActivePlayers(current).length
+    if (activeCount <= MIN_ACTIVE_PLAYERS) return { ok: false, reason: 'min-players' }
+
+    const next = current.map((p) => (p.id === id ? { ...p, status: 'removed' as const } : p))
     setPlayers(next)
     persistPlayers(next)
     return { ok: true }
@@ -185,6 +206,7 @@ function App() {
         setCardSet(null)
       }}
       onAddPlayer={handleAddPlayerDuringGame}
+      onRetirePlayer={handleRetirePlayerDuringGame}
     />
   )
 }

@@ -1,12 +1,16 @@
 import { useRef, useState } from 'react'
 import { getPlayers, setPlayers } from '../../lib/storage'
+import { getActivePlayers } from './activePlayers'
 import type { Player } from './types'
 
 const MAX_PLAYERS = 20
+const MIN_ACTIVE_PLAYERS = 2
 
 export type AddPlayerResult =
   | { ok: true }
   | { ok: false; reason: 'empty' | 'duplicate' | 'max' }
+
+export type RemoveLivePlayerResult = { ok: true } | { ok: false; reason: 'min-players' }
 
 export function usePlayers() {
   const [players, setPlayersState] = useState<Player[]>(() => getPlayers())
@@ -21,10 +25,11 @@ export function usePlayers() {
     }
 
     const current = playersRef.current
-    if (current.some((p) => p.name === trimmed)) {
+    const activeCurrent = getActivePlayers(current)
+    if (activeCurrent.some((p) => p.name === trimmed)) {
       return { ok: false, reason: 'duplicate' }
     }
-    if (current.length >= MAX_PLAYERS) {
+    if (activeCurrent.length >= MAX_PLAYERS) {
       return { ok: false, reason: 'max' }
     }
 
@@ -44,5 +49,18 @@ export function usePlayers() {
     setPlayers(next)
   }
 
-  return { players, addPlayer, removePlayer }
+  function retirePlayer(id: string): RemoveLivePlayerResult {
+    const activeCount = getActivePlayers(playersRef.current).length
+    if (activeCount <= MIN_ACTIVE_PLAYERS) {
+      return { ok: false, reason: 'min-players' }
+    }
+
+    const next = playersRef.current.map((p) => (p.id === id ? { ...p, status: 'removed' as const } : p))
+    playersRef.current = next
+    setPlayersState(next)
+    setPlayers(next)
+    return { ok: true }
+  }
+
+  return { players, addPlayer, removePlayer, retirePlayer }
 }

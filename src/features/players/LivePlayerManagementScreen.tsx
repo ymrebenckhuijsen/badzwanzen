@@ -1,6 +1,7 @@
 import { getActivePlayers } from './activePlayers'
 import { AddPlayerControl } from './AddPlayerControl'
-import type { AddPlayerResult } from './usePlayers'
+import { LivePlayerList } from './LivePlayerList'
+import type { AddPlayerResult, RemoveLivePlayerResult } from './usePlayers'
 import type { Player } from './types'
 
 const MIN_PLAYERS_TO_CONTINUE = 2
@@ -9,11 +10,18 @@ const MAX_PLAYERS = 20
 interface LivePlayerManagementScreenProps {
   players: Player[]
   onAdd: (name: string) => AddPlayerResult
+  onRetire: (id: string) => RemoveLivePlayerResult
   onClose: () => void
 }
 
-export function LivePlayerManagementScreen({ players, onAdd, onClose }: LivePlayerManagementScreenProps) {
+export function LivePlayerManagementScreen({
+  players,
+  onAdd,
+  onRetire,
+  onClose,
+}: LivePlayerManagementScreenProps) {
   const activePlayers = getActivePlayers(players)
+  const minPlayersReached = activePlayers.length <= MIN_PLAYERS_TO_CONTINUE
 
   return (
     <div className="mx-auto flex min-h-svh max-w-md flex-col gap-6 bg-surface p-6 text-on-surface">
@@ -34,20 +42,9 @@ export function LivePlayerManagementScreen({ players, onAdd, onClose }: LivePlay
           <span>
             SPELERS ({activePlayers.length}/{MAX_PLAYERS})
           </span>
-          {activePlayers.length <= MIN_PLAYERS_TO_CONTINUE && (
-            <span>Minimaal {MIN_PLAYERS_TO_CONTINUE} nodig</span>
-          )}
+          {minPlayersReached && <span>Minimaal {MIN_PLAYERS_TO_CONTINUE} nodig</span>}
         </div>
-        <ul className="flex max-h-64 flex-col gap-2 overflow-y-auto">
-          {activePlayers.map((player) => (
-            <li
-              key={player.id}
-              className="flex items-center justify-between rounded-md bg-surface-container px-4 py-3 text-on-surface"
-            >
-              <span className="font-body text-body-lg truncate">{player.name}</span>
-            </li>
-          ))}
-        </ul>
+        <LivePlayerList players={activePlayers} onRetire={onRetire} minPlayersReached={minPlayersReached} />
       </div>
 
       <AddPlayerControl onAdd={onAdd} />

@@ -198,4 +198,111 @@ describe('usePlayers', () => {
 
     expect(getPlayers()).toEqual(result.current.players)
   })
+
+  describe('retirePlayer (live-game removal)', () => {
+    it('marks the player as removed without deleting them from the array', () => {
+      const { result } = renderHook(() => usePlayers())
+
+      act(() => {
+        result.current.addPlayer('Yara')
+        result.current.addPlayer('Tom')
+        result.current.addPlayer('Kim')
+      })
+      const [, tom] = result.current.players
+
+      let outcome: ReturnType<typeof result.current.retirePlayer> | undefined
+      act(() => {
+        outcome = result.current.retirePlayer(tom.id)
+      })
+
+      expect(outcome).toEqual({ ok: true })
+      expect(result.current.players).toHaveLength(3)
+      expect(result.current.players.find((p) => p.id === tom.id)).toMatchObject({
+        name: 'Tom',
+        status: 'removed',
+      })
+    })
+
+    it('persists the retirement to storage', () => {
+      const { result } = renderHook(() => usePlayers())
+
+      act(() => {
+        result.current.addPlayer('Yara')
+        result.current.addPlayer('Tom')
+        result.current.addPlayer('Kim')
+      })
+      const [, tom] = result.current.players
+
+      act(() => {
+        result.current.retirePlayer(tom.id)
+      })
+
+      expect(getPlayers()).toEqual(result.current.players)
+    })
+
+    it('refuses to retire a player once only 2 active players remain', () => {
+      const { result } = renderHook(() => usePlayers())
+
+      act(() => {
+        result.current.addPlayer('Yara')
+        result.current.addPlayer('Tom')
+      })
+      const [yara] = result.current.players
+
+      let outcome: ReturnType<typeof result.current.retirePlayer> | undefined
+      act(() => {
+        outcome = result.current.retirePlayer(yara.id)
+      })
+
+      expect(outcome).toEqual({ ok: false, reason: 'min-players' })
+      expect(result.current.players.every((p) => p.status !== 'removed')).toBe(true)
+    })
+  })
+
+  describe('addPlayer scoped to active players (FR-013)', () => {
+    it('accepts a name matching an already-removed player', () => {
+      const { result } = renderHook(() => usePlayers())
+
+      act(() => {
+        result.current.addPlayer('Yara')
+        result.current.addPlayer('Tom')
+        result.current.addPlayer('Kim')
+      })
+      const [yara] = result.current.players
+
+      act(() => {
+        result.current.retirePlayer(yara.id)
+      })
+
+      let outcome: ReturnType<typeof result.current.addPlayer> | undefined
+      act(() => {
+        outcome = result.current.addPlayer('Yara')
+      })
+
+      expect(outcome).toEqual({ ok: true })
+      expect(result.current.players.filter((p) => p.name === 'Yara')).toHaveLength(2)
+    })
+
+    it('does not count removed players toward the 20-player maximum', () => {
+      const { result } = renderHook(() => usePlayers())
+
+      act(() => {
+        for (let i = 0; i < 20; i++) {
+          result.current.addPlayer(`Player ${i}`)
+        }
+      })
+      const [first] = result.current.players
+
+      act(() => {
+        result.current.retirePlayer(first.id)
+      })
+
+      let outcome: ReturnType<typeof result.current.addPlayer> | undefined
+      act(() => {
+        outcome = result.current.addPlayer('Nieuwkomer')
+      })
+
+      expect(outcome).toEqual({ ok: true })
+    })
+  })
 })

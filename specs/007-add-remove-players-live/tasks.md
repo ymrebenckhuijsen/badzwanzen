@@ -117,41 +117,41 @@ others continue playing, and that removing down to 2 players disables further re
 
 ### Tests for User Story 2
 
-- [ ] T010 [P] [US2] Write failing test in `src/features/players/usePlayers.test.ts`:
+- [X] T010 [P] [US2] Write failing test in `src/features/players/usePlayers.test.ts`:
   `retirePlayer(id)` sets that player's `status` to `'removed'` without removing them from the
   array, calls `setPlayers()` (persist), and returns `{ ok: false, reason: 'min-players' }` with
   **no** state change when only 2 active players currently exist (contracts/live-player-
   management-contract.md)
-- [ ] T011 [P] [US2] Write failing test in the same file: `addPlayer` accepts a name matching an
+- [X] T011 [P] [US2] Write failing test in the same file: `addPlayer` accepts a name matching an
   already-`removed` player (FR-013), and the max-20 check counts only active
   (`status !== 'removed'`) players
-- [ ] T012 [P] [US2] Write failing test in `src/features/players/LivePlayerList.test.tsx` (new
+- [X] T012 [P] [US2] Write failing test in `src/features/players/LivePlayerList.test.tsx` (new
   file): tapping a row's delete icon shows an inline "Verwijder {name}? Ja／Nee" confirmation
   instead of removing immediately (FR-008); "Nee" cancels with no call to `onRetire`; "Ja" calls
   `onRetire(id)`; when `minPlayersReached` is `true`, every row's delete icon is `disabled` and
   does not open the confirmation state on tap (FR-009)
-- [ ] T013 [P] [US2] Write failing test in `LivePlayerManagementScreen.test.tsx`: composes
+- [X] T013 [P] [US2] Write failing test in `LivePlayerManagementScreen.test.tsx`: composes
   `<LivePlayerList>` passing `minPlayersReached = activePlayers.length <= 2`; a successful
   `onRetire` result removes that player from the visibly rendered list (US2 AC1) without
   affecting other rows or `onAdd`
-- [ ] T014 [US2] Write failing test in `src/App.test.tsx`: from an in-progress game with 3+
+- [X] T014 [US2] Write failing test in `src/App.test.tsx`: from an in-progress game with 3+
   players, remove one via the "Spelers Beheer" confirm flow — assert that player is never
   chosen as a target across several subsequent draws, while the remaining players continue to
   be drawable (US2 AC3, SC-003)
 
 ### Implementation for User Story 2
 
-- [ ] T015 [US2] Add `RemoveLivePlayerResult` type and `retirePlayer(id)` to
+- [X] T015 [US2] Add `RemoveLivePlayerResult` type and `retirePlayer(id)` to
   `src/features/players/usePlayers.ts` per the contract — makes T010 pass (depends on T001)
-- [ ] T016 [US2] Update `usePlayers.addPlayer`'s duplicate-name and max-20 checks to use
+- [X] T016 [US2] Update `usePlayers.addPlayer`'s duplicate-name and max-20 checks to use
   `getActivePlayers(current)` instead of the raw array — makes T011 pass (depends on T003, T015)
-- [ ] T017 [US2] Implement `LivePlayerList` in `src/features/players/LivePlayerList.tsx` per the
+- [X] T017 [US2] Implement `LivePlayerList` in `src/features/players/LivePlayerList.tsx` per the
   contract: `confirmingId` local state, inline "Verwijder {name}? Ja／Nee" row, `disabled`
   delete icons when `minPlayersReached` — makes T012 pass
-- [ ] T018 [US2] In `LivePlayerManagementScreen.tsx`, replace the read-only list from T007 with
+- [X] T018 [US2] In `LivePlayerManagementScreen.tsx`, replace the read-only list from T007 with
   `<LivePlayerList players={activePlayers} onRetire={onRetire}
   minPlayersReached={activePlayers.length <= 2} />` — makes T013 pass (depends on T007, T017)
-- [ ] T019 [US2] In `src/App.tsx`, extend the lifted players-mutation path (from T008) with
+- [X] T019 [US2] In `src/App.tsx`, extend the lifted players-mutation path (from T008) with
   `retirePlayer`, wire it to `LivePlayerManagementScreen`'s `onRetire` prop, and confirm
   `GameScreen`'s `activePlayers` (T009) already excludes newly `'removed'` players on the next
   render — makes T014 pass (depends on T009, T015, T018)

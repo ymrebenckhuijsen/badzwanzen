@@ -18,6 +18,7 @@ describe('LivePlayerManagementScreen (US1)', () => {
       <LivePlayerManagementScreen
         players={makePlayers(['Yara', 'Tom', 'Mila'])}
         onAdd={vi.fn()}
+        onRetire={vi.fn()}
         onClose={vi.fn()}
       />,
     )
@@ -33,7 +34,7 @@ describe('LivePlayerManagementScreen (US1)', () => {
     const players = makePlayers(['Yara', 'Tom'])
     players.push({ id: 'p-Mila', name: 'Mila', order: 2, status: 'removed' })
 
-    render(<LivePlayerManagementScreen players={players} onAdd={vi.fn()} onClose={vi.fn()} />)
+    render(<LivePlayerManagementScreen players={players} onAdd={vi.fn()} onRetire={vi.fn()} onClose={vi.fn()} />)
 
     expect(screen.getByText('SPELERS (2/20)')).toBeInTheDocument()
     expect(screen.queryByText('Mila')).not.toBeInTheDocument()
@@ -42,7 +43,7 @@ describe('LivePlayerManagementScreen (US1)', () => {
   it('calls onAdd with the entered name via the same "+" flow used pre-game (FR-001)', async () => {
     const onAdd = vi.fn().mockReturnValue({ ok: true })
     const user = userEvent.setup()
-    render(<LivePlayerManagementScreen players={makePlayers(['Yara'])} onAdd={onAdd} onClose={vi.fn()} />)
+    render(<LivePlayerManagementScreen players={makePlayers(['Yara'])} onAdd={onAdd} onRetire={vi.fn()} onClose={vi.fn()} />)
 
     await openAddForm(user)
     await user.type(screen.getByRole('textbox'), 'Nieuwkomer')
@@ -54,7 +55,7 @@ describe('LivePlayerManagementScreen (US1)', () => {
   it('surfaces the same duplicate-name error copy used pre-game (US1 AC2, FR-002)', async () => {
     const onAdd = vi.fn().mockReturnValue({ ok: false, reason: 'duplicate' })
     const user = userEvent.setup()
-    render(<LivePlayerManagementScreen players={makePlayers(['Yara'])} onAdd={onAdd} onClose={vi.fn()} />)
+    render(<LivePlayerManagementScreen players={makePlayers(['Yara'])} onAdd={onAdd} onRetire={vi.fn()} onClose={vi.fn()} />)
 
     await openAddForm(user)
     await user.type(screen.getByRole('textbox'), 'Yara')
@@ -66,7 +67,7 @@ describe('LivePlayerManagementScreen (US1)', () => {
   it('surfaces the same max-players error copy used pre-game (US1 AC3, FR-002)', async () => {
     const onAdd = vi.fn().mockReturnValue({ ok: false, reason: 'max' })
     const user = userEvent.setup()
-    render(<LivePlayerManagementScreen players={makePlayers(['Yara'])} onAdd={onAdd} onClose={vi.fn()} />)
+    render(<LivePlayerManagementScreen players={makePlayers(['Yara'])} onAdd={onAdd} onRetire={vi.fn()} onClose={vi.fn()} />)
 
     await openAddForm(user)
     await user.type(screen.getByRole('textbox'), 'Iemand')
@@ -78,10 +79,44 @@ describe('LivePlayerManagementScreen (US1)', () => {
   it('calls onClose when the close action is used', async () => {
     const onClose = vi.fn()
     const user = userEvent.setup()
-    render(<LivePlayerManagementScreen players={makePlayers(['Yara', 'Tom'])} onAdd={vi.fn()} onClose={onClose} />)
+    render(<LivePlayerManagementScreen players={makePlayers(['Yara', 'Tom'])} onAdd={vi.fn()} onRetire={vi.fn()} onClose={onClose} />)
 
     await user.click(screen.getByRole('button', { name: /sluiten/i }))
 
     expect(onClose).toHaveBeenCalled()
+  })
+})
+
+describe('LivePlayerManagementScreen (US2)', () => {
+  it('removes a player from the visible list when their removal is confirmed', async () => {
+    const onRetire = vi.fn().mockReturnValue({ ok: true })
+    const user = userEvent.setup()
+    render(
+      <LivePlayerManagementScreen
+        players={makePlayers(['Yara', 'Tom', 'Mila'])}
+        onAdd={vi.fn()}
+        onRetire={onRetire}
+        onClose={vi.fn()}
+      />,
+    )
+
+    await user.click(screen.getByRole('button', { name: /verwijder tom/i }))
+    await user.click(screen.getByRole('button', { name: /^ja$/i }))
+
+    expect(onRetire).toHaveBeenCalled()
+  })
+
+  it('passes minPlayersReached to disable removal once only 2 active players remain (FR-009)', () => {
+    render(
+      <LivePlayerManagementScreen
+        players={makePlayers(['Yara', 'Tom'])}
+        onAdd={vi.fn()}
+        onRetire={vi.fn()}
+        onClose={vi.fn()}
+      />,
+    )
+
+    expect(screen.getByRole('button', { name: /verwijder yara/i })).toBeDisabled()
+    expect(screen.getByRole('button', { name: /verwijder tom/i })).toBeDisabled()
   })
 })
