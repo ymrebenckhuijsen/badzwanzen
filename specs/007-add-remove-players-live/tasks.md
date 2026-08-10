@@ -172,9 +172,11 @@ without a reload.
 
 ### Tests for User Story 3
 
-- [ ] T020 [P] [US3] Write failing test in `LivePlayerManagementScreen.test.tsx`: a successful
+- [X] T020 [P] [US3] Write failing test in `LivePlayerManagementScreen.test.tsx`: a successful
   add followed immediately by a successful remove (same mounted instance, no unmount/remount)
   updates the rendered list and the "SPELERS (n/20)" count after each action in turn (US3 AC1)
+  — passed immediately (green, not red), confirming FR-011 was already satisfied structurally
+  by Phases 3/4; no implementation change was needed, per this phase's note
 
 ### Implementation for User Story 3
 

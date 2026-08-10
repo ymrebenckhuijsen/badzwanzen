@@ -1,7 +1,9 @@
+import { useState } from 'react'
 import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { describe, expect, it, vi } from 'vitest'
 import { LivePlayerManagementScreen } from './LivePlayerManagementScreen'
+import type { AddPlayerResult, RemoveLivePlayerResult } from './usePlayers'
 import type { Player } from './types'
 
 function makePlayers(names: string[]): Player[] {
@@ -118,5 +120,43 @@ describe('LivePlayerManagementScreen (US2)', () => {
 
     expect(screen.getByRole('button', { name: /verwijder yara/i })).toBeDisabled()
     expect(screen.getByRole('button', { name: /verwijder tom/i })).toBeDisabled()
+  })
+})
+
+function StatefulWrapper({ initialPlayers }: { initialPlayers: Player[] }) {
+  const [players, setPlayers] = useState(initialPlayers)
+
+  function onAdd(name: string): AddPlayerResult {
+    setPlayers((prev) => [...prev, { id: `p-${name}`, name, order: prev.length, status: 'active' }])
+    return { ok: true }
+  }
+
+  function onRetire(id: string): RemoveLivePlayerResult {
+    setPlayers((prev) => prev.map((p) => (p.id === id ? { ...p, status: 'removed' } : p)))
+    return { ok: true }
+  }
+
+  return <LivePlayerManagementScreen players={players} onAdd={onAdd} onRetire={onRetire} onClose={vi.fn()} />
+}
+
+describe('LivePlayerManagementScreen (US3)', () => {
+  it('reflects an add immediately followed by a remove, with no unmount/remount (FR-011)', async () => {
+    const user = userEvent.setup()
+    render(<StatefulWrapper initialPlayers={makePlayers(['Yara', 'Tom'])} />)
+
+    expect(screen.getByText('SPELERS (2/20)')).toBeInTheDocument()
+
+    await openAddForm(user)
+    await user.type(screen.getByRole('textbox'), 'Nieuwkomer')
+    await user.click(screen.getByRole('button', { name: /bevestigen/i }))
+
+    expect(screen.getByText('SPELERS (3/20)')).toBeInTheDocument()
+    expect(screen.getByText('Nieuwkomer')).toBeInTheDocument()
+
+    await user.click(screen.getByRole('button', { name: /verwijder nieuwkomer/i }))
+    await user.click(screen.getByRole('button', { name: /^ja$/i }))
+
+    expect(screen.getByText('SPELERS (2/20)')).toBeInTheDocument()
+    expect(screen.queryByText('Nieuwkomer')).not.toBeInTheDocument()
   })
 })
