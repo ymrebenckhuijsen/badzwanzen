@@ -306,6 +306,38 @@ describe('App live player management (007 US2)', () => {
   })
 })
 
+describe('App live player management (007, status reset on new session)', () => {
+  beforeEach(() => {
+    window.localStorage.clear()
+    mockedBuildSessionCardPool.mockReset()
+  })
+
+  it('treats a player removed in a previous session as active again in a brand-new session (regression)', async () => {
+    window.localStorage.setItem(
+      'badzwanzen:players',
+      JSON.stringify([
+        { id: 'p-yara', name: 'Yara', order: 0 },
+        { id: 'p-tom', name: 'Tom', order: 1, status: 'removed' },
+        { id: 'p-kim', name: 'Kim', order: 2 },
+      ]),
+    )
+    mockedBuildSessionCardPool.mockReturnValue(onePlayerPool())
+    const user = userEvent.setup()
+    render(<App />)
+
+    // Pre-game setup shows the full stored roster regardless of a stale status flag.
+    expect(screen.getByText('SPELERS (3/20)')).toBeInTheDocument()
+    await user.click(screen.getByRole('button', { name: /spel starten/i }))
+
+    await user.click(screen.getByRole('button', { name: /spelers/i }))
+
+    // A brand-new session must treat everyone as active, including a player who was
+    // removed during a previous session — "removed" is scoped to that session, not permanent.
+    expect(screen.getByText('SPELERS (3/20)')).toBeInTheDocument()
+    expect(screen.getByText('Tom')).toBeInTheDocument()
+  })
+})
+
 describe('App card-set selection lock across replay (US1, FR-012)', () => {
   beforeEach(() => {
     window.localStorage.clear()

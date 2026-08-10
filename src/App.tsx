@@ -187,8 +187,16 @@ function App() {
     return { ok: true }
   }
 
+  function handleStartGame(startedPlayers: Player[]) {
+    // A player's "removed" status is scoped to the session it happened in — starting a
+    // brand-new session must treat everyone as active again, not carry the flag forward.
+    const resetPlayers = startedPlayers.map((p) => ({ ...p, status: undefined }))
+    setPlayers(resetPlayers)
+    persistPlayers(resetPlayers)
+  }
+
   if (!players) {
-    return <PlayerSetupScreen onStartGame={setPlayers} />
+    return <PlayerSetupScreen onStartGame={handleStartGame} />
   }
 
   if (!cardSet) {
