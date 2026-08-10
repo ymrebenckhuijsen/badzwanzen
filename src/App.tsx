@@ -99,7 +99,7 @@ function GameScreen({
   }
 
   return (
-    <div className="mx-auto flex min-h-svh max-w-md flex-col gap-6 bg-surface p-6 text-on-surface">
+    <div className="mx-auto flex min-h-svh max-w-md landscape:max-w-2xl flex-col gap-6 overflow-y-auto bg-surface p-6 text-on-surface short:gap-3 short:p-4">
       <header className="flex items-center justify-between pt-4">
         <h1 className="font-display text-headline-lg-mobile text-on-surface">Badzwanzen</h1>
         <button

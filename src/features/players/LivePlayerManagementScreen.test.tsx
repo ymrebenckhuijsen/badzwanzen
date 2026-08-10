@@ -160,3 +160,25 @@ describe('LivePlayerManagementScreen (US3)', () => {
     expect(screen.queryByText('Nieuwkomer')).not.toBeInTheDocument()
   })
 })
+
+describe('LivePlayerManagementScreen landscape layout (feature 013)', () => {
+  it('root container carries the landscape/short responsive classes', () => {
+    const { container } = render(
+      <LivePlayerManagementScreen
+        players={makePlayers(['Yara', 'Tom'])}
+        onAdd={vi.fn()}
+        onRetire={vi.fn()}
+        onClose={vi.fn()}
+      />,
+    )
+
+    expect(container.firstChild).toHaveClass(
+      'min-h-svh',
+      'max-w-md',
+      'landscape:max-w-2xl',
+      'overflow-y-auto',
+      'short:gap-3',
+      'short:p-4',
+    )
+  })
+})

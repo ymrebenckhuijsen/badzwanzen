@@ -16,7 +16,7 @@ export function PlayerSetupScreen({ onStartGame }: PlayerSetupScreenProps = {}) 
   const canStart = players.length >= MIN_PLAYERS_TO_START
 
   return (
-    <div className="mx-auto flex min-h-svh max-w-md flex-col gap-6 bg-surface p-6 text-on-surface">
+    <div className="mx-auto flex min-h-svh max-w-md landscape:max-w-2xl flex-col gap-6 overflow-y-auto bg-surface p-6 text-on-surface short:gap-3 short:p-4">
       <header className="flex flex-col gap-1 pt-4 text-center">
         <h1 className="font-display text-headline-lg-mobile text-on-surface">Badzwanzen</h1>
         <p className="font-body text-body-lg text-on-surface-variant">

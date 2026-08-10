@@ -8,7 +8,7 @@ interface EndOfGameScreenProps {
 
 export function EndOfGameScreen({ players, onPlayAgain, onChangePlayers }: EndOfGameScreenProps) {
   return (
-    <div className="mx-auto flex min-h-svh max-w-md flex-col gap-6 bg-surface p-6 text-on-surface">
+    <div className="mx-auto flex min-h-svh max-w-md landscape:max-w-2xl flex-col gap-6 overflow-y-auto bg-surface p-6 text-on-surface short:gap-3 short:p-4">
       <header className="flex flex-col items-center gap-2 pt-4 text-center">
         <span className="font-display text-label-bold w-fit rounded-full bg-tertiary-container px-3 py-1 text-on-tertiary-container">
           GAME OVER

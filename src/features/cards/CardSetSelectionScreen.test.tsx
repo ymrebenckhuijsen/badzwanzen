@@ -89,3 +89,20 @@ describe('CardSetSelectionScreen (US2 — seed set always reachable)', () => {
     expect(onContinue).toHaveBeenCalledWith(catalog[0])
   })
 })
+
+describe('CardSetSelectionScreen landscape layout (feature 013)', () => {
+  it('root container carries the landscape/short responsive classes', () => {
+    const { container } = render(
+      <CardSetSelectionScreen catalog={multiSetCatalog()} onContinue={vi.fn()} />,
+    )
+
+    expect(container.firstChild).toHaveClass(
+      'min-h-svh',
+      'max-w-md',
+      'landscape:max-w-2xl',
+      'overflow-y-auto',
+      'short:gap-3',
+      'short:p-4',
+    )
+  })
+})

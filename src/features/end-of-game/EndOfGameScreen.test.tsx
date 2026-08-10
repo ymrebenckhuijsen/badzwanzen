@@ -54,3 +54,24 @@ describe('EndOfGameScreen (US2)', () => {
     expect(onChangePlayers).toHaveBeenCalledTimes(1)
   })
 })
+
+describe('EndOfGameScreen landscape layout (feature 013)', () => {
+  it('root container carries the landscape/short responsive classes', () => {
+    const { container } = render(
+      <EndOfGameScreen
+        players={makePlayers(['Yara', 'Tom'])}
+        onPlayAgain={vi.fn()}
+        onChangePlayers={vi.fn()}
+      />,
+    )
+
+    expect(container.firstChild).toHaveClass(
+      'min-h-svh',
+      'max-w-md',
+      'landscape:max-w-2xl',
+      'overflow-y-auto',
+      'short:gap-3',
+      'short:p-4',
+    )
+  })
+})
