@@ -205,6 +205,78 @@ describe('App card-set selection (US1, feature 010)', () => {
   })
 })
 
+describe('App live player management (007 US1)', () => {
+  beforeEach(() => {
+    window.localStorage.clear()
+    mockedBuildSessionCardPool.mockReset()
+  })
+
+  it('adds a late player mid-game via the "Spelers" entry point without resetting progress', async () => {
+    mockedBuildSessionCardPool.mockReturnValue(twoCardPool())
+    const user = userEvent.setup()
+    render(<App />)
+
+    await startSession(user, ['Yara', 'Tom'])
+    await draw(user)
+    expect(screen.getByText(CARD_A_TEXT)).toBeInTheDocument()
+
+    await user.click(screen.getByRole('button', { name: /spelers/i }))
+    expect(screen.getByRole('heading', { name: /spelers/i })).toBeInTheDocument()
+
+    await addPlayer(user, 'Nieuwkomer')
+    expect(screen.getByText('Nieuwkomer')).toBeInTheDocument()
+
+    await user.click(screen.getByRole('button', { name: /sluiten/i }))
+
+    // Existing progress (the already-drawn card) is untouched by the round trip.
+    expect(screen.getByText(CARD_A_TEXT)).toBeInTheDocument()
+  })
+})
+
+describe('App live player management (007 US2)', () => {
+  beforeEach(() => {
+    window.localStorage.clear()
+    mockedBuildSessionCardPool.mockReset()
+    setCatalog([
+      {
+        id: 'specific-set',
+        name: 'Specific testset',
+        cards: [
+          {
+            id: 'specific-001',
+            type: 'assignment',
+            targeting: { kind: 'specific', count: 1 },
+            instructionText: '{player} moet een dansje doen',
+          },
+        ],
+      },
+    ])
+  })
+
+  it('excludes a removed player from every subsequent draw target (US2 AC3, SC-003)', async () => {
+    mockedBuildSessionCardPool.mockReturnValue({
+      poolCardIds: ['specific-001'],
+      remainingCardIds: ['specific-001'],
+      hasEnded: false,
+    })
+    const user = userEvent.setup()
+    render(<App />)
+
+    await startSession(user, ['Yara', 'Tom', 'Kim'])
+
+    await user.click(screen.getByRole('button', { name: /spelers/i }))
+    await user.click(screen.getByRole('button', { name: /verwijder tom/i }))
+    await user.click(screen.getByRole('button', { name: /^ja$/i }))
+    expect(screen.queryByText('Tom')).not.toBeInTheDocument()
+    await user.click(screen.getByRole('button', { name: /sluiten/i }))
+
+    await draw(user)
+
+    expect(screen.queryByText(/tom moet een dansje doen/i)).not.toBeInTheDocument()
+    expect(screen.getByText(/moet een dansje doen/i)).toBeInTheDocument()
+  })
+})
+
 describe('App card-set selection lock across replay (US1, FR-012)', () => {
   beforeEach(() => {
     window.localStorage.clear()

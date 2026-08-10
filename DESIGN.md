@@ -229,3 +229,6 @@ frontmatter for exact values):
   card set, slots in after the players screen. Hand-authored (not Stitch — see its addendum)
   reusing the exact tokens/components of the Spelers Toevoegen screen. See
   [specs/010-card-sets/DESIGN.md](specs/010-card-sets/DESIGN.md).
+- `007-add-remove-players-live`: "Spelers Beheer" (mobile) — live player-management view shown
+  during an in-progress game, for adding/removing players without restarting the session. See
+  [specs/007-add-remove-players-live/DESIGN.md](specs/007-add-remove-players-live/DESIGN.md).
