@@ -13,7 +13,21 @@
       "Bash(gh auth status)",
       "Bash(git ls-tree *)",
       "Bash(npm run build)",
-      "Bash(npm run lint)"
+      "Bash(npm run lint)",
+      "Bash(npm test)",
+      "Bash(npx vitest run *)",
+      "Bash(npx playwright test)",
+      "Bash(.specify/scripts/bash/setup-design.sh *)",
+      "Bash(.specify/scripts/bash/setup-tasks.sh *)",
+      "mcp__stitch__list_screens",
+      "mcp__claude-in-chrome__tabs_context_mcp",
+      "mcp__claude-in-chrome__read_console_messages",
+      "mcp__claude-in-chrome__get_page_text",
+      "mcp__claude-in-chrome__find",
+      "mcp__stitch__get_screen",
+      "mcp__claude-in-chrome__read_page",
+      "mcp__stitch__list_design_systems",
+      "mcp__claude-in-chrome__read_network_requests"
     ]
   }
 }
