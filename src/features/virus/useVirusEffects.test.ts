@@ -41,6 +41,39 @@ describe('useVirusEffects — starting effects', () => {
   })
 })
 
+describe('useVirusEffects — simultaneous lift for a shared activation (FR-001)', () => {
+  it('gives every effect from the same startEffects call the same liftThreshold', () => {
+    const { result } = renderHook(() => useVirusEffects())
+
+    act(() => {
+      result.current.startEffects('virus-1', ['p-alice', 'p-bob', 'p-carol'], 0)
+    })
+
+    const thresholds = result.current.effects.map((e) => e.liftThreshold)
+    expect(new Set(thresholds).size).toBe(1)
+  })
+
+  it('lifts all effects from the same "iedereen" activation on the same advanceOnAssignmentGameDraw call', () => {
+    const { result } = renderHook(() => useVirusEffects())
+
+    act(() => {
+      result.current.startEffects('virus-1', ['p-alice', 'p-bob', 'p-carol'], 0)
+    })
+
+    let lastLifted: ReturnType<typeof result.current.advanceOnAssignmentGameDraw> = []
+    // 50 draws guarantees the threshold (max possible is 10 + 40) has been reached
+    for (let i = 0; i < 50; i++) {
+      act(() => {
+        lastLifted = result.current.advanceOnAssignmentGameDraw()
+      })
+      if (result.current.effects[0]!.status === 'lifted') break
+    }
+
+    expect(result.current.effects.every((e) => e.status === 'lifted')).toBe(true)
+    expect(lastLifted.map((e) => e.targetPlayerId).sort()).toEqual(['p-alice', 'p-bob', 'p-carol'])
+  })
+})
+
 describe('useVirusEffects — advancing and threshold-lifting', () => {
   it('increments assignmentGameDrawsSinceStart for active effects on each assignment/game draw', () => {
     const { result } = renderHook(() => useVirusEffects())
