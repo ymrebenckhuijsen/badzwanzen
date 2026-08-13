@@ -68,13 +68,21 @@ function GameScreen({
   }
 
   function handleAcknowledgeLift() {
-    setLiftQueue((prev) => prev.slice(1))
+    if (isGroupLift && currentLift) {
+      // A "iedereen" virus's effects all end together — clear the whole group in one
+      // acknowledgement instead of requiring one click per affected player.
+      setLiftQueue((prev) => prev.filter((e) => e.cardId !== currentLift.cardId))
+    } else {
+      setLiftQueue((prev) => prev.slice(1))
+    }
   }
 
   const currentLift = liftQueue[0]
   const currentLiftCard = currentLift
     ? cardSet.cards.find((c) => c.id === currentLift.cardId)
     : null
+  // A general-targeted virus is shown as one shared end message, not one per affected player.
+  const isGroupLift = currentLiftCard?.targeting.kind === 'general'
 
   const currentCard = current ? cardSet.cards.find((c) => c.id === current.cardId) : null
 
@@ -116,7 +124,7 @@ function GameScreen({
         <>
           <VirusLiftCard
             liftText={currentLiftCard.liftText ?? ''}
-            targetPlayerId={currentLift.targetPlayerId}
+            targetPlayerId={isGroupLift ? null : currentLift.targetPlayerId}
             players={players}
           />
           <ActiveVirusList effects={effects} players={players} />

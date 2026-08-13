@@ -3,12 +3,14 @@ import { renderCardText } from '../cards/renderCardText'
 
 interface VirusLiftCardProps {
   liftText: string
-  targetPlayerId: string
+  targetPlayerId: string | null
   players: Player[]
 }
 
 export function VirusLiftCard({ liftText, targetPlayerId, players }: VirusLiftCardProps) {
-  const name = players.find((p) => p.id === targetPlayerId)?.name ?? ''
+  // null targetPlayerId means this is the single shared message for a virus that targeted
+  // "iedereen" — its liftText has no {player} token to substitute.
+  const name = targetPlayerId ? (players.find((p) => p.id === targetPlayerId)?.name ?? '') : ''
 
   return (
     <div className="rounded-xl border-2 border-secondary bg-surface-container-high p-6 text-on-surface">

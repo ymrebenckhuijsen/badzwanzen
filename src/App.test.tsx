@@ -438,6 +438,59 @@ describe('App virus concurrency cap (US1, feature 011)', () => {
   })
 })
 
+describe('App general-virus lift shows one shared message, not one per player (feature 015 follow-up)', () => {
+  beforeEach(() => {
+    window.localStorage.clear()
+    mockedBuildSessionCardPool.mockReset()
+  })
+
+  it('shows a single VIRUS OPGEHEVEN screen for an "iedereen" virus lifted for all players at once', async () => {
+    const generalVirusCard: Card = {
+      id: 'virus-general',
+      type: 'virus',
+      targeting: { kind: 'general' },
+      instructionText: 'Iedereen moet vanaf nu fluisteren.',
+      liftText: 'Iedereen mag weer gewoon praten.',
+    }
+    const capTestSet: CardSet = {
+      id: 'general-virus-set',
+      name: 'General virus set',
+      cards: [generalVirusCard],
+    }
+
+    setCatalog([capTestSet])
+    mockedBuildSessionCardPool.mockReturnValue({
+      poolCardIds: ['virus-general'],
+      remainingCardIds: ['virus-general'],
+      hasEnded: false,
+    })
+
+    const user = userEvent.setup()
+    render(<App />)
+
+    await startSession(user, ['Yara', 'Tom', 'Sam'])
+
+    // Drawing the virus card starts it for all 3 players.
+    await draw(user)
+    expect(screen.getByText('Yara')).toBeInTheDocument()
+    expect(screen.getByText('Tom')).toBeInTheDocument()
+    expect(screen.getByText('Sam')).toBeInTheDocument()
+
+    // The pool is now exhausted — the next draw force-lifts every active effect at once,
+    // which for a general-targeted card means all 3 players' effects lift together.
+    await draw(user)
+
+    expect(screen.getAllByText('Iedereen mag weer gewoon praten.')).toHaveLength(1)
+    expect(screen.getByRole('button', { name: /verder/i })).toBeInTheDocument()
+
+    // One acknowledgement clears the whole group, not just one of the three effects.
+    await user.click(screen.getByRole('button', { name: /verder/i }))
+
+    expect(screen.queryByText('Iedereen mag weer gewoon praten.')).not.toBeInTheDocument()
+    expect(screen.getByText(/potje afgelopen/i)).toBeInTheDocument()
+  })
+})
+
 describe('App landscape layout (feature 013)', () => {
   beforeEach(() => {
     window.localStorage.clear()
