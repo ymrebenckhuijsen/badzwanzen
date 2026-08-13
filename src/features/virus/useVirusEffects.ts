@@ -17,12 +17,15 @@ export function useVirusEffects() {
     targetPlayerIds: string[],
     startedAtDraw: number,
   ): ActiveVirusEffect[] {
+    // One shared roll per activation (not per target player) is what makes every player hit by
+    // the same "iedereen" virus lift together on the same draw turn (FR-001).
+    const liftThreshold = randomLiftThreshold()
     const newEffects: ActiveVirusEffect[] = targetPlayerIds.map((targetPlayerId) => ({
       id: `effect-${idCounter.current++}`,
       cardId,
       targetPlayerId,
       startedAtDraw,
-      liftThreshold: randomLiftThreshold(),
+      liftThreshold,
       assignmentGameDrawsSinceStart: 0,
       status: 'active',
       liftReason: null,

@@ -137,6 +137,39 @@ describe('useDrawPile', () => {
   })
 })
 
+describe('useDrawPile — remainingCount is unaffected by virus-lift events (FR-003)', () => {
+  it('leaves remainingCount unchanged when activeVirusCount changes without a draw() call', () => {
+    // activeVirusCount dropping (e.g. from 2 to 1) is exactly what happens in App.tsx when a
+    // virus lifts — this proves that transition alone never shrinks the draw pile; only an
+    // actual draw() call does.
+    const cardSet: CardSet = {
+      id: 'set',
+      name: 'Set',
+      cards: [makeCard('a'), makeCard('b'), makeCard('c')],
+    }
+    const pool: SessionCardPool = {
+      poolCardIds: ['a', 'b', 'c'],
+      remainingCardIds: ['a', 'b', 'c'],
+      hasEnded: false,
+    }
+    const players = makePlayers(['Alice', 'Bob'])
+
+    const hook = renderHook(
+      ({ activeVirusCount }: { activeVirusCount: number }) =>
+        useDrawPile(pool, cardSet, players, activeVirusCount),
+      { initialProps: { activeVirusCount: 2 } },
+    )
+
+    expect(hook.result.current.remainingCount).toBe(3)
+
+    hook.rerender({ activeVirusCount: 1 })
+    expect(hook.result.current.remainingCount).toBe(3)
+
+    hook.rerender({ activeVirusCount: 0 })
+    expect(hook.result.current.remainingCount).toBe(3)
+  })
+})
+
 describe('useDrawPile — 4-virus concurrency cap (FR-002 through FR-004)', () => {
   const MAX_ACTIVE_VIRUSES = 4
 
