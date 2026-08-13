@@ -145,6 +145,34 @@ describe('validateCardSet', () => {
     expect(errors.some((e) => e.cardId === 'virus-1')).toBe(true)
   })
 
+  it('accepts a general-targeted virus card whose lift text has zero {player} tokens', () => {
+    const cardSet = makeValidCardSet()
+    cardSet.cards[3] = makeCard({
+      id: 'virus-0',
+      type: 'virus',
+      targeting: { kind: 'general' },
+      instructionText: 'Iedereen mag niet meer met links drinken',
+      liftText: 'Iedereen is genezen van dit virus',
+    })
+
+    const errors = validateCardSet(cardSet)
+    expect(errors.some((e) => e.cardId === 'virus-0')).toBe(false)
+  })
+
+  it('errors when a general-targeted virus card lift text has one {player} token', () => {
+    const cardSet = makeValidCardSet()
+    cardSet.cards[3] = makeCard({
+      id: 'virus-0',
+      type: 'virus',
+      targeting: { kind: 'general' },
+      instructionText: 'Iedereen mag niet meer met links drinken',
+      liftText: '{player} is genezen van dit virus',
+    })
+
+    const errors = validateCardSet(cardSet)
+    expect(errors.some((e) => e.cardId === 'virus-0')).toBe(true)
+  })
+
   it('errors when the card set has fewer than 4 virus cards', () => {
     const cardSet = makeValidCardSet()
     cardSet.cards = cardSet.cards.filter((c) => c.type !== 'virus')

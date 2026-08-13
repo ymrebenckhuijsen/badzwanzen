@@ -30,11 +30,14 @@ export function validateCardSet(cardSet: CardSet): ValidationError[] {
     }
 
     if (card.type === 'virus') {
+      // A general-targeted virus lifts as one shared message addressed to everyone (no single
+      // player to name), while a specific-targeted virus's liftText still names its one target.
+      const expectedLiftTokens = card.targeting.kind === 'general' ? 0 : 1
       const liftTokens = countPlayerTokens(card.liftText ?? '')
-      if (liftTokens !== 1) {
+      if (liftTokens !== expectedLiftTokens) {
         errors.push({
           cardId: card.id,
-          message: `Virus card "${card.id}" has ${liftTokens} {player} token(s) in liftText, expected exactly 1`,
+          message: `Virus card "${card.id}" has ${liftTokens} {player} token(s) in liftText, expected exactly ${expectedLiftTokens}`,
         })
       }
     }

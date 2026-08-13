@@ -12,7 +12,7 @@ const badzwanzenCards: Card[] = [
     type: 'virus',
     targeting: { kind: 'general' },
     instructionText: 'De oneven strafpunten worden nu verdubbeld.',
-    liftText: '{player} straft weer gewoon: de verdubbeling van oneven strafpunten is voorbij.',
+    liftText: 'Iedereen straft weer gewoon: de verdubbeling van oneven strafpunten is voorbij.',
   },
   {
     id: 'bz-opdracht-002',
@@ -159,7 +159,7 @@ const badzwanzenCards: Card[] = [
     type: 'virus',
     targeting: { kind: 'general' },
     instructionText: 'Lekker slissen iedereen moet tot nader order slissen.',
-    liftText: '{player} mag weer normaal praten, het slis-virus is voorbij.',
+    liftText: 'Iedereen mag weer normaal praten, het slis-virus is voorbij.',
   },
   {
     id: 'bz-opdracht-019',
@@ -244,7 +244,7 @@ const badzwanzenCards: Card[] = [
     type: 'virus',
     targeting: { kind: 'general' },
     instructionText: 'Je moet met je hand in je onderbroek zitten anders 3 strafpunten per nieuwe vraag.',
-    liftText: '{player} mag zijn hand weer uit zijn onderbroek halen.',
+    liftText: 'Iedereen mag zijn hand weer uit zijn onderbroek halen.',
   },
   {
     id: 'bz-opdracht-031',
@@ -281,7 +281,7 @@ const badzwanzenCards: Card[] = [
     type: 'virus',
     targeting: { kind: 'general' },
     instructionText: 'Je mag alleen nog maar fluisteren.',
-    liftText: '{player} mag weer normaal praten in plaats van fluisteren.',
+    liftText: 'Iedereen mag weer normaal praten in plaats van fluisteren.',
   },
   {
     id: 'bz-opdracht-036',
@@ -415,14 +415,14 @@ const badzwanzenCards: Card[] = [
     type: 'virus',
     targeting: { kind: 'general' },
     instructionText: 'Dans tot nader order op je plek of 5 strafpunten per vraag.',
-    liftText: '{player} hoeft niet meer op zijn plek te dansen.',
+    liftText: 'Iedereen hoeft niet meer op zijn plek te dansen.',
   },
   {
     id: 'bz-virus-009',
     type: 'virus',
     targeting: { kind: 'general' },
     instructionText: 'Je mag je glas niet meer met rechts vast houden anders 2 strafpunten.',
-    liftText: '{player} mag zijn glas weer gewoon met rechts vasthouden.',
+    liftText: 'Iedereen mag zijn glas weer gewoon met rechts vasthouden.',
   },
   {
     id: 'bz-opdracht-051',
@@ -814,7 +814,7 @@ const badzwanzenCards: Card[] = [
     type: 'virus',
     targeting: { kind: 'general' },
     instructionText: 'Doe een dierengeluid naar keuze na elke keer als er een strafpunt genomen wordt.',
-    liftText: '{player} hoeft geen dierengeluid meer te maken bij een strafpunt.',
+    liftText: 'Iedereen hoeft geen dierengeluid meer te maken bij een strafpunt.',
   },
   {
     id: 'bz-spel-018',
@@ -912,7 +912,7 @@ const badzwanzenCards: Card[] = [
     type: 'virus',
     targeting: { kind: 'general' },
     instructionText: 'Je mag niks meer eten 5 strafpunten per ding dat je eet.',
-    liftText: '{player} mag weer gewoon eten.',
+    liftText: 'Iedereen mag weer gewoon eten.',
   },
   {
     id: 'bz-opdracht-111',
@@ -1412,21 +1412,21 @@ const badzwanzenCards: Card[] = [
     type: 'virus',
     targeting: { kind: 'general' },
     instructionText: 'Je mag niemand aanwijzen doe je dit wel 3 strafpunten.',
-    liftText: '{player} mag weer gewoon naar anderen wijzen.',
+    liftText: 'Iedereen mag weer gewoon naar anderen wijzen.',
   },
   {
     id: 'bz-virus-028',
     type: 'virus',
     targeting: { kind: 'general' },
     instructionText: 'Iedereen praat als een piraat zo niet 2 strafpunten.',
-    liftText: '{player} hoeft niet meer als een piraat te praten.',
+    liftText: 'Iedereen hoeft niet meer als een piraat te praten.',
   },
   {
     id: 'bz-virus-029',
     type: 'virus',
     targeting: { kind: 'general' },
     instructionText: 'Je mag niemand meer aankijken zo wel bijde 3 strafpunten.',
-    liftText: '{player} mag anderen weer gewoon aankijken.',
+    liftText: 'Iedereen mag anderen weer gewoon aankijken.',
   },
   {
     id: 'bz-virus-030',
@@ -1594,7 +1594,7 @@ const badzwanzenCards: Card[] = [
     type: 'virus',
     targeting: { kind: 'general' },
     instructionText: 'Iedereen krijgt de voornaam van de persoon rechts van jou als je je vergist neem je een strafpunt.',
-    liftText: '{player} mag weer gewoon zijn eigen naam gebruiken.',
+    liftText: 'Iedereen mag weer gewoon zijn eigen naam gebruiken.',
   },
   {
     id: 'bz-opdracht-184',
@@ -2075,7 +2075,7 @@ const badzwanzenCards: Card[] = [
     type: 'virus',
     targeting: { kind: 'general' },
     instructionText: 'Je mag geen ja of nee meer zeggen doe je dit wel 2 strafpunten.',
-    liftText: '{player} mag weer gewoon ja of nee zeggen.',
+    liftText: 'Iedereen mag weer gewoon ja of nee zeggen.',
   },
   {
     id: 'bz-opdracht-230',
@@ -2191,7 +2191,7 @@ const badzwanzenCards: Card[] = [
     type: 'virus',
     targeting: { kind: 'general' },
     instructionText: 'Je mag geen ja of nee meer zeggen.',
-    liftText: '{player} mag ja en nee weer gewoon terug zeggen.',
+    liftText: 'Iedereen mag ja en nee weer gewoon terug zeggen.',
   },
   {
     id: 'bz-opdracht-242',
@@ -2228,7 +2228,7 @@ const badzwanzenCards: Card[] = [
     type: 'virus',
     targeting: { kind: 'general' },
     instructionText: 'Je Mag tot nader niemand aankijken.',
-    liftText: '{player} mag anderen weer aankijken, dit virus is voorbij.',
+    liftText: 'Iedereen mag anderen weer aankijken, dit virus is voorbij.',
   },
   {
     id: 'bz-virus-052',
@@ -2242,7 +2242,7 @@ const badzwanzenCards: Card[] = [
     type: 'virus',
     targeting: { kind: 'general' },
     instructionText: 'Doe de macarna tot nader order.',
-    liftText: '{player} hoeft de macarena niet meer te doen.',
+    liftText: 'Iedereen hoeft de macarena niet meer te doen.',
   },
   {
     id: 'bz-opdracht-247',
@@ -2287,7 +2287,7 @@ const badzwanzenCards: Card[] = [
     type: 'virus',
     targeting: { kind: 'general' },
     instructionText: 'Je mag alleen nog maar slokken nemen met iets anders dan je handen anders 5 strafpunten.',
-    liftText: '{player} mag weer gewoon met zijn handen drinken.',
+    liftText: 'Iedereen mag weer gewoon met zijn handen drinken.',
   },
   {
     id: 'bz-opdracht-250',
@@ -2306,7 +2306,7 @@ const badzwanzenCards: Card[] = [
     type: 'virus',
     targeting: { kind: 'general' },
     instructionText: 'Als een liedje is afgelopen draai je een keer In de rondte de laatste neemt 2 strafpunten.',
-    liftText: '{player} hoeft niet meer rond te draaien als een liedje afloopt.',
+    liftText: 'Iedereen hoeft niet meer rond te draaien als een liedje afloopt.',
   },
   {
     id: 'bz-virus-058',
@@ -2441,7 +2441,7 @@ const badzwanzenCards: Card[] = [
     type: 'virus',
     targeting: { kind: 'general' },
     instructionText: 'Je mag geen ik meer zeggen doe je dit wel 2 strafpunten per keer.',
-    liftText: '{player} mag het woordje ik weer gewoon zeggen.',
+    liftText: 'Iedereen mag het woordje ik weer gewoon zeggen.',
   },
   {
     id: 'bz-opdracht-263',
@@ -2461,7 +2461,7 @@ const badzwanzenCards: Card[] = [
     type: 'virus',
     targeting: { kind: 'general' },
     instructionText: 'Niemand mag elkaars voornaam meer zeggen 1 strafpunt per keer dat je het wel doet.',
-    liftText: '{player} mag elkaars voornaam weer gewoon zeggen.',
+    liftText: 'Iedereen mag elkaars voornaam weer gewoon zeggen.',
   },
   {
     id: 'bz-opdracht-264',
@@ -2481,7 +2481,7 @@ const badzwanzenCards: Card[] = [
     type: 'virus',
     targeting: { kind: 'general' },
     instructionText: 'Iedereen moet elkaar aanspreken met professor en dan zijn naam 2 strafpunten elke keer dat je dit niet doet.',
-    liftText: '{player} hoeft iedereen niet meer met professor aan te spreken.',
+    liftText: 'Iedereen hoeft elkaar niet meer met professor aan te spreken.',
   },
   {
     id: 'bz-opdracht-265',
@@ -2803,7 +2803,7 @@ const badzwanzenCards: Card[] = [
     type: 'virus',
     targeting: { kind: 'general' },
     instructionText: 'Iedereen praat als Yoda anders 2 strafpunten.',
-    liftText: '{player} hoeft niet meer als Yoda te praten.',
+    liftText: 'Iedereen hoeft niet meer als Yoda te praten.',
   },
   {
     id: 'bz-opdracht-302',
@@ -2846,7 +2846,7 @@ const badzwanzenCards: Card[] = [
     type: 'virus',
     targeting: { kind: 'general' },
     instructionText: 'Tikkertje als je wordt getikt ben jij hem en krijg je een strafpunt.',
-    liftText: '{player} speelt geen Tikkertje meer mee.',
+    liftText: 'Iedereen speelt geen Tikkertje meer mee.',
   },
   {
     id: 'bz-virus-070',
@@ -3056,7 +3056,7 @@ const badzwanzenCards: Card[] = [
     type: 'virus',
     targeting: { kind: 'general' },
     instructionText: 'Iedereen moet zijn glas met 2 handen vasthouden als je het vergeet 2 strafpunten.',
-    liftText: '{player} mag zijn glas weer met 1 hand vasthouden.',
+    liftText: 'Iedereen mag zijn glas weer met 1 hand vasthouden.',
   },
   {
     id: 'bz-opdracht-324',
@@ -3131,7 +3131,7 @@ const badzwanzenCards: Card[] = [
     type: 'virus',
     targeting: { kind: 'general' },
     instructionText: 'Niemand mag het woord maar zeggen vanaf nu elke keer dat je het wel zegt 2 strafpunten.',
-    liftText: "{player} mag het woord 'maar' weer gewoon zeggen.",
+    liftText: "Iedereen mag het woord 'maar' weer gewoon zeggen.",
   },
   {
     id: 'bz-spel-103',
@@ -3355,7 +3355,7 @@ const badzwanzenCards: Card[] = [
     type: 'virus',
     targeting: { kind: 'general' },
     instructionText: 'Iedereen moet als ze een strafpunt nemen terecht zeggen vergeten is nog een extra strafpunt.',
-    liftText: '{player} hoeft geen terecht meer te zeggen bij een strafpunt.',
+    liftText: 'Iedereen hoeft geen terecht meer te zeggen bij een strafpunt.',
   },
   {
     id: 'bz-opdracht-348',
@@ -3436,14 +3436,14 @@ const badzwanzenCards: Card[] = [
     type: 'virus',
     targeting: { kind: 'general' },
     instructionText: 'Als je gaat zitten moet je eerst je glas aanraken anders 2 strafpunten.',
-    liftText: '{player} hoeft zijn glas niet meer aan te raken bij het zitten.',
+    liftText: 'Iedereen hoeft zijn glas niet meer aan te raken bij het zitten.',
   },
   {
     id: 'bz-virus-090',
     type: 'virus',
     targeting: { kind: 'general' },
     instructionText: 'Geen alcoholverspilling meer anders doe je een atje pissen is ook alcoholverspilling.',
-    liftText: '{player} mag zijn drankje weer gewoon leegdrinken zonder bang te zijn voor alcoholverspilling.',
+    liftText: 'Iedereen mag zijn drankje weer gewoon leegdrinken zonder bang te zijn voor alcoholverspilling.',
   },
   {
     id: 'bz-opdracht-352',
@@ -3498,7 +3498,7 @@ const badzwanzenCards: Card[] = [
     type: 'virus',
     targeting: { kind: 'general' },
     instructionText: 'Elke keer als je drinkt moet je met je glas tegen iemand anders zijn glas aan tikken vergeet je het 2 strafpunten.',
-    liftText: '{player} hoeft niet meer te klinken voor elke slok.',
+    liftText: 'Iedereen hoeft niet meer te klinken voor elke slok.',
   },
   {
     id: 'bz-opdracht-356',
@@ -3523,7 +3523,7 @@ const badzwanzenCards: Card[] = [
     type: 'virus',
     targeting: { kind: 'general' },
     instructionText: 'Iedereen moet de persoon links van hun aanspreken met baas 2 strafpunten per keer dat je het vergeet.',
-    liftText: '{player} hoeft zijn buurman niet meer baas te noemen.',
+    liftText: 'Iedereen hoeft zijn buurman niet meer baas te noemen.',
   },
   {
     id: 'bz-opdracht-359',
@@ -3621,7 +3621,7 @@ const badzwanzenCards: Card[] = [
     type: 'virus',
     targeting: { kind: 'general' },
     instructionText: 'Iedereen moet zijn glas met zijn pink omhoog vasthouden vergeten is 1 strafpunt.',
-    liftText: '{player} mag zijn pink weer laten zakken.',
+    liftText: 'Iedereen mag zijn pink weer laten zakken.',
   },
   {
     id: 'bz-opdracht-365',
