@@ -170,10 +170,10 @@ describe('useDrawPile — remainingCount is unaffected by virus-lift events (FR-
   })
 })
 
-describe('useDrawPile — 4-virus concurrency cap (FR-002 through FR-004)', () => {
-  const MAX_ACTIVE_VIRUSES = 4
+describe('useDrawPile — 3-virus concurrency cap (FR-002 through FR-004)', () => {
+  const MAX_ACTIVE_VIRUSES = 3
 
-  it('starts a virus card normally when fewer than 4 different viruses are active', () => {
+  it('starts a virus card normally when fewer than 3 different viruses are active', () => {
     const cardSet: CardSet = {
       id: 'set',
       name: 'Set',
