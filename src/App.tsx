@@ -127,7 +127,7 @@ function GameScreen({
             targetPlayerId={isGroupLift ? null : currentLift.targetPlayerId}
             players={players}
           />
-          <ActiveVirusList effects={effects} players={players} />
+          <ActiveVirusList effects={effects} players={players} cardSet={cardSet} />
           <button
             type="button"
             onClick={handleAcknowledgeLift}
@@ -146,7 +146,7 @@ function GameScreen({
             />
           )}
 
-          <ActiveVirusList effects={effects} players={players} />
+          <ActiveVirusList effects={effects} players={players} cardSet={cardSet} />
 
           <button
             type="button"

@@ -390,8 +390,8 @@ describe('App virus concurrency cap (US1, feature 011)', () => {
     mockedBuildSessionCardPool.mockReset()
   })
 
-  it('caps concurrently active viruses at 4 — a 5th virus card is skipped and the next eligible card is drawn instead', async () => {
-    const virusCards: Card[] = Array.from({ length: 5 }, (_, i) => ({
+  it('caps concurrently active viruses at 3 — a 4th virus card is skipped and the next eligible card is drawn instead', async () => {
+    const virusCards: Card[] = Array.from({ length: 4 }, (_, i) => ({
       id: `virus-${i + 1}`,
       type: 'virus',
       targeting: { kind: 'general' },
@@ -422,19 +422,19 @@ describe('App virus concurrency cap (US1, feature 011)', () => {
 
     await startSession(user, ['Yara', 'Tom', 'Sam'])
 
-    // Draw the first 4 virus cards — each becomes active for all 3 players.
-    for (let i = 0; i < 4; i++) {
+    // Draw the first 3 virus cards — each is a distinct "iedereen" virus, so each renders as its
+    // own shared "Iedereen" row (feature 016 grouping) rather than a per-player ×N badge.
+    for (let i = 0; i < 3; i++) {
       await draw(user)
     }
-    expect(screen.getAllByText('×4').length).toBeGreaterThan(0)
+    expect(screen.getAllByText('Iedereen')).toHaveLength(3)
 
-    // The 5th virus card is skipped (cap is full); the assignment card is shown instead, and
-    // the active-virus badge never reaches ×5.
+    // The 4th virus card is skipped (cap is full, feature 016 lowered it from 4 to 3); the
+    // assignment card is shown instead, and the "Iedereen" row count never reaches 4.
     await draw(user)
 
     expect(screen.getByText(assignmentCard.instructionText)).toBeInTheDocument()
-    expect(screen.queryByText('×5')).not.toBeInTheDocument()
-    expect(screen.getAllByText('×4').length).toBeGreaterThan(0)
+    expect(screen.getAllByText('Iedereen')).toHaveLength(3)
   })
 })
 
@@ -470,11 +470,10 @@ describe('App general-virus lift shows one shared message, not one per player (f
 
     await startSession(user, ['Yara', 'Tom', 'Sam'])
 
-    // Drawing the virus card starts it for all 3 players.
+    // Drawing the virus card starts it for all 3 players, shown as one shared "Iedereen" row
+    // (feature 016 grouping) rather than one row per player.
     await draw(user)
-    expect(screen.getByText('Yara')).toBeInTheDocument()
-    expect(screen.getByText('Tom')).toBeInTheDocument()
-    expect(screen.getByText('Sam')).toBeInTheDocument()
+    expect(screen.getAllByText('Iedereen')).toHaveLength(1)
 
     // The pool is now exhausted — the next draw force-lifts every active effect at once,
     // which for a general-targeted card means all 3 players' effects lift together.

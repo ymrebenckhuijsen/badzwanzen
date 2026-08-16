@@ -232,3 +232,7 @@ frontmatter for exact values):
 - `007-add-remove-players-live`: "Spelers Beheer" (mobile) — live player-management view shown
   during an in-progress game, for adding/removing players without restarting the session. See
   [specs/007-add-remove-players-live/DESIGN.md](specs/007-add-remove-players-live/DESIGN.md).
+- `016-virus-list-improvements`: "Badzwanzen - Actieve Virussen Detail" (mobile) — edit of the
+  `004-assignments-and-viruses` "Virus Kaart" screen's "ACTIEVE VIRUSSEN" section only: shared
+  "Iedereen" row for group-wide viruses, tap-to-reveal instruction text on every row. See
+  [specs/016-virus-list-improvements/DESIGN.md](specs/016-virus-list-improvements/DESIGN.md).

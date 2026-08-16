@@ -3,7 +3,7 @@ import type { CardSet, DrawnCard, SessionCardPool } from './card.types'
 import type { Player } from '../players/types'
 import { resolveTargets } from './resolveTargets'
 
-const MAX_ACTIVE_VIRUSES = 4
+const MAX_ACTIVE_VIRUSES = 3
 
 export function useDrawPile(
   pool: SessionCardPool,
