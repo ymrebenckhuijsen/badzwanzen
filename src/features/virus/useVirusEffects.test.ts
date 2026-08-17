@@ -18,7 +18,8 @@ describe('useVirusEffects — starting effects', () => {
       expect(effect.status).toBe('active')
       expect(effect.liftReason).toBeNull()
       expect(effect.assignmentGameDrawsSinceStart).toBe(0)
-      expect(effect.liftThreshold).toBeGreaterThanOrEqual(10)
+      expect(effect.liftThreshold).toBeGreaterThanOrEqual(15)
+      expect(effect.liftThreshold).toBeLessThanOrEqual(20)
     }
   })
 
