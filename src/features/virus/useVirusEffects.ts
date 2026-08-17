@@ -1,8 +1,8 @@
 import { useRef, useState } from 'react'
 import type { ActiveVirusEffect } from './virus.types'
 
-const MIN_LIFT_THRESHOLD = 10
-const LIFT_THRESHOLD_RANDOM_SPREAD = 41 // yields liftThreshold in [10, 50] — see research.md: no fixed maximum by design
+const MIN_LIFT_THRESHOLD = 15
+const LIFT_THRESHOLD_RANDOM_SPREAD = 6 // yields liftThreshold in [15, 20]
 
 function randomLiftThreshold(): number {
   return MIN_LIFT_THRESHOLD + Math.floor(Math.random() * LIFT_THRESHOLD_RANDOM_SPREAD)
