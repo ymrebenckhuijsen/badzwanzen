@@ -103,3 +103,111 @@ describe('badzwanzenCardSet — new virus cards have bespoke, content-specific l
     expect(shareStem(instructionKeywords, liftKeywords)).toBe(true)
   })
 })
+
+describe('badzwanzenCardSet — feature 018 content addition (US1)', () => {
+  const PRE_FEATURE_018_CARD_COUNT = 628
+  const NEW_CARD_COUNT = 460
+
+  it('contains at least the pre-feature card count plus every converted, deduplicated raw-input.md entry', () => {
+    expect(badzwanzenCardSet.cards.length).toBeGreaterThanOrEqual(
+      PRE_FEATURE_018_CARD_COUNT + NEW_CARD_COUNT,
+    )
+  })
+
+  it('includes the very first raw line as a general virus card ("harde G")', () => {
+    const card = badzwanzenCardSet.cards.find((c) => c.instructionText.toLowerCase().includes('harde g'))
+    expect(card).toBeDefined()
+    expect(card?.type).toBe('virus')
+    expect(card?.targeting).toEqual({ kind: 'general' })
+  })
+
+  it('includes a card converted from raw-input.md list 1 ("wat kijk je")', () => {
+    expect(
+      badzwanzenCardSet.cards.some((c) => c.instructionText.toLowerCase().includes('wat kijk je')),
+    ).toBe(true)
+  })
+
+  it('includes a card converted from raw-input.md list 2 ("missie volbracht")', () => {
+    expect(
+      badzwanzenCardSet.cards.some((c) => c.instructionText.toLowerCase().includes('missie volbracht')),
+    ).toBe(true)
+  })
+
+  it('includes a card converted from raw-input.md list 3 ("professioneel feestbeest")', () => {
+    expect(
+      badzwanzenCardSet.cards.some((c) =>
+        c.instructionText.toLowerCase().includes('professioneel feestbeest'),
+      ),
+    ).toBe(true)
+  })
+
+  it('does not add a new, separate card set to the catalog (still just Badzwanzen)', () => {
+    expect(badzwanzenCardSet.id).toBe('badzwanzen-crew')
+    expect(badzwanzenCardSet.name).toBe('Badzwanzen')
+  })
+})
+
+describe('badzwanzenCardSet — feature 018 new virus cards have bespoke liftText (US2)', () => {
+  const GENERIC_LIFT_TEXTS = new Set([
+    '{player} is genezen.',
+    'het virus is voorbij.',
+    '{player} is verlost van het virus.',
+  ])
+  const STOPWORDS = new Set([
+    'player',
+    'anders',
+    'moet',
+    'mag',
+    'vanaf',
+    'strafpunt',
+    'strafpunten',
+    'wordt',
+    'iemand',
+    'iedereen',
+    'zonder',
+    'gewoon',
+    'meer',
+    'weer',
+    'krijgt',
+    'geven',
+    'keer',
+    'vergeten',
+    'hoeft',
+  ])
+
+  function significantWords(text: string): string[] {
+    return text
+      .toLowerCase()
+      .replace(/[.,;:'"()]/g, '')
+      .split(/[\s-]+/)
+      .filter((w) => w.length >= 4 && w !== 'player' && !STOPWORDS.has(w))
+  }
+
+  function shareStem(a: string[], b: string[]): boolean {
+    return a.some((wa) => b.some((wb) => wa.slice(0, 4) === wb.slice(0, 4)))
+  }
+
+  const newVirusIds = badzwanzenCardSet.cards
+    .filter((c) => c.type === 'virus' && Number(c.id.replace('bz-virus-', '')) >= 103)
+    .map((c) => c.id)
+
+  it('has at least 80 new virus cards to check (sanity check on the sample itself)', () => {
+    expect(newVirusIds.length).toBeGreaterThanOrEqual(80)
+  })
+
+  it.each(newVirusIds)('virus card %s has a non-generic liftText tied to its own effect', (id) => {
+    const card = badzwanzenCardSet.cards.find((c) => c.id === id)!
+    expect(GENERIC_LIFT_TEXTS.has(card.liftText!.toLowerCase())).toBe(false)
+
+    const instructionKeywords = significantWords(card.instructionText)
+    const liftKeywords = significantWords(card.liftText!)
+    expect(shareStem(instructionKeywords, liftKeywords)).toBe(true)
+  })
+})
+
+describe('badzwanzenCardSet — no byte-identical instructionText duplicates (FR-006 floor check, US3)', () => {
+  it('has no two cards with identical instructionText', () => {
+    const texts = badzwanzenCardSet.cards.map((c) => c.instructionText)
+    expect(new Set(texts).size).toBe(texts.length)
+  })
+})
